@@ -1,6 +1,6 @@
-ACLOCAL_AMFLAGS = -I m4
+AUTOMAKE_OPTIONS = subdir-objects
 
-SUBDIRS = src doc
+ACLOCAL_AMFLAGS = -I m4
 
 MAINTAINERCLEANFILES = \
 Makefile.in \
@@ -24,7 +24,15 @@ m4/ltoptions.m4 \
 m4/ltsugar.m4 \
 m4/ltversion.m4
 
-EXTRA_DIST = \
+lib_LTLIBRARIES =
+bin_PROGRAMS =
+EXTRA_DIST =
+
+include src/lib/Makefile.mk
+include src/bin/Makefile.mk
+include doc/Makefile.mk
+
+EXTRA_DIST += \
 AUTHORS \
 COPYING \
 README \
@@ -39,12 +47,6 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = sw.pc
 
 .PHONY: doc coverage
-
-# Documentation
-
-doc:
-	@echo "entering doc/"
-	make -C doc doc
 
 # Unit tests
 
