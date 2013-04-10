@@ -1,0 +1,26 @@
+
+Configuration:
+
+ * From a clean repo:
+
+  ./autogen.sh
+  ./configure
+
+ * From a tar ball:
+
+  ./configure
+
+Compilation:
+
+ make
+
+Installation
+
+ make install
+
+
+By default, the library is installed in /usr/local. To change that
+behavior, pass --prefix=my_path to configure (replace my_path by the
+directory you want)
+
+
