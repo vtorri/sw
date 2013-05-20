@@ -121,7 +121,7 @@ test_rk()
 }
 
 static void
-advection(const mra_t *mra, double delta_t, double *ps0, double *ps1)
+advection(const mra_t *mra, double delta_t, double *ps0, double *ps1, double **charac)
 {
   const scale_fct_t *sf;
   const scale_fct_dual_t *sfd;
@@ -154,9 +154,9 @@ advection(const mra_t *mra, double delta_t, double *ps0, double *ps1)
 
 	      //x = (k + n - c * delta_t * mra_size_x_get(mra)) / (double)mra_size_x_get(mra);
 
-	      x = tr_rk4(tr_field, (double)(k+n) / (double)mra_size_x_get(mra), delta_t);
-
+              x = charac[k - mra_size_inf_x_get (mra)][n + (degree >> 1)];
               v += weights[n + (degree >> 1)] * scale_fct_value_get(sf, mra_size_x_get(mra) * mod(x, 1) - l);
+
               //v += weights[n + (degree >> 1)] * scale_fct_value_get(sf, mra_size_x_get(mra) * x - l);
             }
           ps1[i_k] += v * ps0[i_l];
@@ -164,6 +164,43 @@ advection(const mra_t *mra, double delta_t, double *ps0, double *ps1)
         }
       i_k++;
     }
+}
+
+static double **
+_tr_characteristic_get(mra_t *mra, double delta_t)
+{
+  double **x;
+  int size_k;
+  int size_d;
+  const scale_fct_dual_t *sfd;
+  const double *weights;
+  int32_t degree;
+  int k;
+  int n;
+
+  sfd = mra_scale_fct_dual_get(mra);
+  weights = scale_fct_dual_weights_get(sfd, &degree);
+  degree--;
+
+  size_k = mra_size_sup_x_get (mra) - mra_size_inf_x_get (mra) + 1;
+  size_d = degree + 1;
+
+  x = (double **)malloc(size_k * sizeof(double *));
+
+  for (k = mra_size_inf_x_get (mra); k <= mra_size_sup_x_get (mra); k++)
+    {
+      x[k - mra_size_inf_x_get (mra)] = (double *)malloc(size_d * sizeof(double));
+    }
+
+  for (k = mra_size_inf_x_get (mra); k <= mra_size_sup_x_get (mra); k++)
+    {
+      for (n = -(degree >> 1); n <= degree - (degree >> 1); n++)
+        {
+          x[k - mra_size_inf_x_get (mra)][n + (degree >> 1)] = tr_rk4(tr_field, (double)(k+n) / (double)mra_size_x_get(mra), delta_t);
+        }
+    }
+
+  return x;
 }
 
 static void
@@ -181,6 +218,8 @@ test_advection(int32_t order, int32_t order_dual, int32_t scale, int32_t degree)
   double lambda;
   double delta_t;
 
+  double **charac;
+
   lambda = 100;
 
   size = 1 << scale;
@@ -195,31 +234,44 @@ test_advection(int32_t order, int32_t order_dual, int32_t scale, int32_t degree)
   mra_proj_x_forward(mra, f0, ps0);
 
   /* On fait l'advection ici */
-  delta_t = 0.1;
+  delta_t = 0.01;
 
-  advection(mra, delta_t, ps0, ps1);
-  ps0 = ps1;
-  advection(mra, delta_t, ps0, ps1);
-  ps0 = ps1;
-  /* advection(mra, delta_t, ps0, ps1); */
-  /* ps0 = ps1; */
-  /* advection(mra, delta_t, ps0, ps1); */
-  /* ps0 = ps1; */
-  /* advection(mra, delta_t, ps0, ps1); */
-  /* for (i = 0; i < 1; i++) */
-  /*   { */
-  /*     printf(" * %d\n", i); */
-  /*     advection(mra, delta_t, ps0, ps1); */
-  /*     ps0 = ps1; */
-  /*   } */
+  charac = _tr_characteristic_get(mra, delta_t);
 
-  mra_proj_x_backward(mra, ps1, f1);
+  for (i = 0; i < 10; i++)
+    {
+      double *tmp;
+
+      printf(" * %d\n", i);
+      advection(mra, delta_t, ps0, ps1, charac);
+      tmp = ps0;
+      ps0 = ps1;
+      ps1 = tmp;
+    }
+
+  mra_proj_x_backward(mra, ps0, f1);
 
   file_save(f1, size, "f1.dat");
 
-  /* centree en 0.9 */
-  gaussian_period(f0, lambda, 0.55275, scale);
-  file_save(f0, size, "f2.dat");
+  {
+    double x;
+    double max = -1;
+    int k;
+    int i;
+
+    for (i = 0; i < size; i++)
+      {
+        if (f1[i] > max)
+          {
+            max = f1[i];
+            k = i;
+          }
+      }
+    x = (double)k / (double)mra_size_x_get(mra);
+    printf("max %f en %f\n", max, x);
+    gaussian_period(f0, lambda, x, scale);
+    file_save(f0, size, "f2.dat");
+  }
 
   printf ("adv err : %e\n", sw_error(f0, f1, size));
 
