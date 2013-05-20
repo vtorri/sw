@@ -1,5 +1,5 @@
 
-lib_LTLIBRARIES += src/lib/libsw.la
+lib_LTLIBRARIES += src/lib/libsw.la src/lib/tr/libtransport.la
 
 install_sw_headersdir = $(pkgincludedir)-@VMAJ@
 
@@ -46,3 +46,25 @@ src_lib_libsw_la_CPPFLAGS = \
 src_lib_libsw_la_CFLAGS =
 src_lib_libsw_la_LIBADD = @SW_COVERAGE_LIBS@ -lm
 src_lib_libsw_la_LDFLAGS = -no-undefined -version-info @version_info@
+
+
+install_tr_headersdir = $(pkgincludedir)-@VMAJ@
+
+dist_install_tr_headers_DATA = \
+src/lib/tr/tr.h \
+src/lib/tr/tr_field.h \
+src/lib/tr/tr_rk.h
+
+src_lib_tr_libtransport_la_SOURCES = \
+src/lib/tr/tr.c \
+src/lib/tr/tr_field.c \
+src/lib/tr/tr_rk.c
+
+src_lib_tr_libtransport_la_CPPFLAGS = \
+-I$(top_srcdir)/src/lib/ \
+-I$(top_srcdir)/src/lib/tr \
+-DSW_BUILD
+
+src_lib_tr_libtransport_la_LIBADD = src/lib/libsw.la -lm
+
+src_lib_tr_libtransport_la_LDFLAGS = -no-undefined -version-info @version_info@
