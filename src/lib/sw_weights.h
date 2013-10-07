@@ -18,10 +18,10 @@
 
 
 /**
- * @typedef weights_t
+ * @typedef sw_weights_t
  * @brief Opaque type for weights.
  */
-typedef struct weights weights_t;
+typedef struct sw_weights_s sw_weights_t;
 
 
 /**
@@ -38,10 +38,10 @@ typedef struct weights weights_t;
  * by @p sfb. It is the base class of a scale function. If @p sfb or
  * an error in memory allocation, @c NULL is returned. Other, a new
  * weights object is returned. When the weights are not used anymore,
- * free its memory with weights_del().
+ * free its memory with sw_weights_del().
  */
-SAPI weights_t *weights_new(weights_type_t          type,
-                            const scale_fct_base_t *sfb);
+SAPI sw_weights_t *sw_weights_new(sw_weights_type_t          type,
+				  const sw_scale_fct_base_t *sfb);
 
 /**
  * @brief Free the memory of the given weights.
@@ -49,10 +49,10 @@ SAPI weights_t *weights_new(weights_type_t          type,
  * @param w The weights to free.
  *
  * This function frees the memory of @p w. @p w must have
- * been created with weights_new(). If @p w is @c NULL, this
+ * been created with sw_weights_new(). If @p w is @c NULL, this
  * function does nothing.
  */
-SAPI void weights_del(weights_t *w);
+SAPI void sw_weights_del(sw_weights_t *w);
 
 /**
  * @brief Set the data of the given weights in the Lagrange case.
@@ -68,8 +68,8 @@ SAPI void weights_del(weights_t *w);
  * weights object and compute the weights used for the quadrature
  * formula.
  */
-SAPI void weights_lagrange_data_set(weights_t *w,
-                                    int32_t    degree);
+SAPI void sw_weights_lagrange_data_set(sw_weights_t *w,
+				       int32_t       degree);
 
 /**
  * @brief Set the data of the given weights using the Sweldens algorithm.
@@ -89,18 +89,17 @@ SAPI void weights_lagrange_data_set(weights_t *w,
  * weights object and compute the weights used for the quadrature
  * formula.
  */
-SAPI void weights_sweldens_data_set(weights_t        *w,
-                                    int32_t           order,
-                                    int32_t           scale,
-                                    const rational_t *tau);
+SAPI void sw_weights_sweldens_data_set(sw_weights_t     *w,
+				       int32_t           order,
+				       int32_t           scale,
+				       const rational_t *tau);
 
 
-SAPI weights_t *sw_weights_lagrange_new(const scale_fct_base_t *sfb,
-                                        int32_t                 degree);
+SAPI sw_weights_t *
+sw_weights_lagrange_new(const sw_scale_fct_base_t *sfb, int32_t degree);
 
-SAPI weights_t *sw_weights_sweldens_new(const scale_fct_base_t *sfb,
-                                        int32_t                 r,
-                                        int32_t                 s);
+SAPI sw_weights_t *
+sw_weights_sweldens_new(const sw_scale_fct_base_t *sfb, int32_t r, int32_t s);
 
 /**
  * @brief Return the data of the given weights, according to the type
@@ -119,8 +118,8 @@ SAPI weights_t *sw_weights_sweldens_new(const scale_fct_base_t *sfb,
  * Note that in the Lagrange case,  @p weights_size is the degree of
  * the Lagrange polynomial + 1.
  */
-SAPI const double *weights_get(const weights_t *w,
-                               int32_t         *weights_size);
+SAPI const double *sw_weights_get(const sw_weights_t *w,
+				  int32_t            *weights_size);
 
 
 #endif /* SW_WEIGHTS_H */

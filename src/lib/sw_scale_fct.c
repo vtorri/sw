@@ -21,46 +21,46 @@
  */
 
 
-/* inherit from scale_fct_base_t */
+/* inherit from sw_scale_fct_base_t */
 
-struct scale_fct
+struct sw_scale_fct_s
 {
-    scale_fct_base_t scale_fct_base;
+    sw_scale_fct_base_t scale_fct_base;
 
-    int32_t          order;
-    weights_type_t   type;
-    spline_t        *spline;
+    int32_t             order;
+    sw_weights_type_t   type;
+    sw_spline_t        *spline;
 
-    void (*proj_periodic_backward)(const scale_fct_t *sf,
+    void (*proj_periodic_backward)(const sw_scale_fct_t *sf,
                                    int32_t            scale,
                                    const double      *ps,
                                    double            *f2);
 
-    void (*proj_dirichlet_backward)(const scale_fct_t *sf,
+    void (*proj_dirichlet_backward)(const sw_scale_fct_t *sf,
                                     int32_t            scale,
                                     const double      *ps,
                                     double            *f2);
 };
 
 
-/* inherit from scale_fct_base_t */
+/* inherit from sw_scale_fct_base_t */
 
-struct scale_fct_dual
+struct sw_scale_fct_dual_s
 {
-    scale_fct_base_t scale_fct_base;
+    sw_scale_fct_base_t scale_fct_base;
 
-    int32_t          order;
-    int32_t          order_dual;
-    weights_type_t   type;
+    int32_t             order;
+    int32_t             order_dual;
+    sw_weights_type_t   type;
 
-    weights_t       *weights;
+    sw_weights_t          *weights;
 
-    void (*proj_periodic_forward)(const scale_fct_dual_t *sfd,
+    void (*proj_periodic_forward)(const sw_scale_fct_dual_t *sfd,
                                   int32_t                 scale,
                                   const double           *function,
                                   double                 *ps);
 
-    void (*proj_dirichlet_forward)(const scale_fct_dual_t *sfd,
+    void (*proj_dirichlet_forward)(const sw_scale_fct_dual_t *sfd,
                                    int32_t                 scale,
                                    const double           *function,
                                    double                 *ps);
@@ -153,20 +153,20 @@ struct scale_fct_dual
  * scale function - base class methods
  */
 
-static scale_fct_base_t
-scale_fct_base_new(int32_t     N1,
-                   int32_t     N2,
-                   rational_t *filter)
+static sw_scale_fct_base_t
+sw_scale_fct_base_new(int32_t     N1,
+		      int32_t     N2,
+		      rational_t *filter)
 {
-    scale_fct_base_t  sf;
-    int32_t           i;
+    sw_scale_fct_base_t  sf;
+    int32_t              i;
 
-    memset(&sf, 0, sizeof(scale_fct_base_t));
+    memset(&sf, 0, sizeof(sw_scale_fct_base_t));
 
     if (!filter)
         return sf;
 
-    sf.filter = (double *)malloc(sizeof(double) * (N2 - N1 + 1));
+    sf.filter = (double *)calloc(1, sizeof(double) * (N2 - N1 + 1));
     if (!sf.filter)
         return sf;
 
@@ -183,7 +183,7 @@ scale_fct_base_new(int32_t     N1,
 }
 
 static void
-scale_fct_base_del(scale_fct_base_t *sf)
+sw_scale_fct_base_del(sw_scale_fct_base_t *sf)
 {
     if (!sf)
         return;
@@ -207,13 +207,13 @@ scale_fct_base_del(scale_fct_base_t *sf)
  */
 
 static rational_t *
-scale_fct_filter_get(int32_t  order)
+sw_scale_fct_filter_get(int32_t  order)
 {
     rational_t *filter;
     int64_t     puiss;
     int32_t     i;
 
-    filter = (rational_t *)malloc(sizeof(rational_t) * (order + 1));
+    filter = (rational_t *)calloc(1, sizeof(rational_t) * (order + 1));
     if (!filter)
         return NULL;
 
@@ -226,7 +226,7 @@ scale_fct_filter_get(int32_t  order)
 }
 
 static void
-scale_fct_inner_product_lagrange_periodic_backward(const scale_fct_t *sf, int32_t scale, const double *ps, double *f2)
+sw_scale_fct_inner_product_periodic_backward(const sw_scale_fct_t *sf, int32_t scale, const double *ps, double *f2)
 {
     double  val;
     int32_t i;
@@ -237,7 +237,7 @@ scale_fct_inner_product_lagrange_periodic_backward(const scale_fct_t *sf, int32_
 /*     val = 0.0; */
 /*     for (k = 0; k < (1 << scale); k++)
        { */
-/*       val += ps[k] * scale_fct_value_get(sf, i - k); */
+/*       val += ps[k] * sw_scale_fct_value_get(sf, i - k); */
 /*     } */
 /*     f2[i] = val; */
 /*   } */
@@ -245,17 +245,17 @@ scale_fct_inner_product_lagrange_periodic_backward(const scale_fct_t *sf, int32_
     /*
      * optimisation of the code above : loop on k such that
      * i-k in the support of phi
-     * with scale = 5, 7 millions less of call of scale_fct_value_get...
+     * with scale = 5, 7 millions less of call of sw_scale_fct_value_get...
      */
 
     for (i = 0; i < (1 << scale); i++)
     {
         val = 0.0;
-        for (k = i - ((const scale_fct_base_t *)sf)->N2 + 1; k < i - ((const scale_fct_base_t *)sf)->N1; k++)
+        for (k = i - ((const sw_scale_fct_base_t *)sf)->N2 + 1; k < i - ((const sw_scale_fct_base_t *)sf)->N1; k++)
         {
             if ((k >= 0) && (k < (1 << scale)))
             {
-                val += ps[k] * scale_fct_value_get(sf, i - k);
+                val += ps[k] * sw_scale_fct_value_get(sf, i - k);
             }
         }
         f2[i] = val;
@@ -263,7 +263,7 @@ scale_fct_inner_product_lagrange_periodic_backward(const scale_fct_t *sf, int32_
 }
 
 static void
-scale_fct_inner_product_lagrange_dirichlet_backward(const scale_fct_t *sf, int32_t scale, const double *ps, double *f2)
+sw_scale_fct_inner_product_dirichlet_backward(const sw_scale_fct_t *sf, int32_t scale, const double *ps, double *f2)
 {
     double  val;
     int32_t i;
@@ -274,7 +274,7 @@ scale_fct_inner_product_lagrange_dirichlet_backward(const scale_fct_t *sf, int32
 /*     val = 0.0; */
 /*     for (k = -(1 << scale); k < (1 << scale); k++)
        { */
-/*       val += ps[k + (1 << scale)] * scale_fct_value_get(sf, i - k); */
+/*       val += ps[k + (1 << scale)] * sw_scale_fct_value_get(sf, i - k); */
 /*     } */
 /*     f2[i + (1 << scale)] = val; */
 /*   } */
@@ -282,17 +282,17 @@ scale_fct_inner_product_lagrange_dirichlet_backward(const scale_fct_t *sf, int32
     /*
      * optimisation of the code above : loop on k such that
      * i-k in the support of phi
-     * see scale_fct_inner_product_lagrange_periodic_backward()
+     * see sw_scale_fct_inner_product_lagrange_periodic_backward()
      */
 
     for (i = -(1 << scale); i < (1 << scale); i++)
     {
         val = 0.0;
-        for (k = i - ((const scale_fct_base_t *)sf)->N2 + 1; k < i - ((const scale_fct_base_t *)sf)->N1; k++)
+        for (k = i - ((const sw_scale_fct_base_t *)sf)->N2 + 1; k < i - ((const sw_scale_fct_base_t *)sf)->N1; k++)
         {
             if ((k >= -(1 << scale)) && (k < (1 << scale)))
             {
-                val += ps[k + (1 << scale)] * scale_fct_value_get(sf, i - k);
+                val += ps[k + (1 << scale)] * sw_scale_fct_value_get(sf, i - k);
             }
         }
         f2[i + (1 << scale)] = val;
@@ -305,8 +305,8 @@ scale_fct_inner_product_lagrange_dirichlet_backward(const scale_fct_t *sf, int32
  */
 
 static rational_t *
-scale_fct_dual_filter_get(int32_t  order,
-                          int32_t  order_dual)
+sw_scale_fct_dual_filter_get(int32_t order,
+			     int32_t order_dual)
 {
     rational_t *filter;
     int64_t     puiss;
@@ -316,7 +316,7 @@ scale_fct_dual_filter_get(int32_t  order,
     int32_t     l;
     int32_t     n;
 
-    filter = (rational_t *)malloc(sizeof(rational_t) * (order + (order_dual << 1) - 1));
+    filter = (rational_t *)calloc(1, sizeof(rational_t) * (order + (order_dual << 1) - 1));
     if (!filter)
         return NULL;
 
@@ -369,13 +369,13 @@ mod(int64_t v, int64_t b)
 }
 
 static void
-scale_fct_dual_inner_product_lagrange_periodic_forward(const scale_fct_dual_t *sfd, int32_t scale, const double *function, double *ps)
+sw_scale_fct_dual_inner_product_lagrange_periodic_forward(const sw_scale_fct_dual_t *sfd, int32_t scale, const double *function, double *ps)
 {
     const double *w;
     int64_t       k;
     int32_t       degree;
 
-    w = weights_get(sfd->weights, &degree);
+    w = sw_weights_get(sfd->weights, &degree);
     degree--;
 
     for (k = 0; k < (1 << scale); k++)
@@ -396,14 +396,14 @@ scale_fct_dual_inner_product_lagrange_periodic_forward(const scale_fct_dual_t *s
 }
 
 static void
-scale_fct_dual_inner_product_sweldens_periodic_forward(const scale_fct_dual_t *sfd, int32_t scale, const double *function, double *ps)
+sw_scale_fct_dual_inner_product_sweldens_periodic_forward(const sw_scale_fct_dual_t *sfd, int32_t scale, const double *function, double *ps)
 {
 #if 0
     const double *w;
     int64_t       k;
     int32_t       size;
 
-    w = weights_get(sfd->weights, &size);
+    w = sw_weights_get(sfd->weights, &size);
 
     for (k = 0; k < (1 << scale); k++)
     {
@@ -424,14 +424,14 @@ scale_fct_dual_inner_product_sweldens_periodic_forward(const scale_fct_dual_t *s
 }
 
 static void
-scale_fct_dual_inner_product_lagrange_dirichlet_forward(const scale_fct_dual_t *sfd, int32_t scale, const double *function, double *ps)
+sw_scale_fct_dual_inner_product_lagrange_dirichlet_forward(const sw_scale_fct_dual_t *sfd, int32_t scale, const double *function, double *ps)
 {
     const double *w;
     int64_t       k;
     int32_t       size;
     int32_t       degree;
 
-    w = weights_get(sfd->weights, &degree);
+    w = sw_weights_get(sfd->weights, &degree);
     degree--;
 
     size = 1 << (scale + 1);
@@ -474,78 +474,49 @@ scale_fct_dual_inner_product_lagrange_dirichlet_forward(const scale_fct_dual_t *
  * scale function methods
  */
 
-scale_fct_t *
-scale_fct_new(int32_t order)
+sw_scale_fct_t *
+sw_scale_fct_new(int32_t order)
 {
-    scale_fct_t *sf;
+    sw_scale_fct_t *sf;
 
     if (order <= 0)
         return NULL;
 
-    sf = (scale_fct_t *)malloc(sizeof(scale_fct_t));
+    sf = (sw_scale_fct_t *)calloc(1, sizeof(sw_scale_fct_t));
     if (!sf)
         return NULL;
 
-    sf->scale_fct_base = scale_fct_base_new(-(order >> 1),
-                                            order - (order >> 1),
-                                            scale_fct_filter_get (order));
+    sf->scale_fct_base = sw_scale_fct_base_new(-(order >> 1),
+					       order - (order >> 1),
+					       sw_scale_fct_filter_get(order));
     sf->order = order;
-    sf->spline = spline_new(order);
+    sf->spline = sw_spline_new(order);
     if (!sf->spline)
     {
-        scale_fct_base_del(&sf->scale_fct_base);
+        sw_scale_fct_base_del(&sf->scale_fct_base);
         free(sf);
         return NULL;
     }
+
+    sf->proj_periodic_backward = sw_scale_fct_inner_product_periodic_backward;
+    sf->proj_dirichlet_backward = sw_scale_fct_inner_product_dirichlet_backward;
 
     return sf;
 }
 
 void
-scale_fct_del(scale_fct_t *sf)
+sw_scale_fct_del(sw_scale_fct_t *sf)
 {
     if (!sf)
         return;
 
-    scale_fct_base_del(&sf->scale_fct_base);
-    spline_del(sf->spline);
+    sw_scale_fct_base_del(&sf->scale_fct_base);
+    sw_spline_del(sf->spline);
     free(sf);
 }
 
-uint8_t
-scale_fct_type_set(scale_fct_t   *sf,
-                   weights_type_t type)
-{
-    if (!sf)
-        return 0;
-
-    switch (type)
-    {
-     case SW_WEIGHTS_TYPE_LAGRANGE:
-     case SW_WEIGHTS_TYPE_SWELDENS:
-         sf->proj_periodic_backward = scale_fct_inner_product_lagrange_periodic_backward;
-         sf->proj_dirichlet_backward = scale_fct_inner_product_lagrange_dirichlet_backward;
-         break;
-     default:
-         return 0;
-    }
-
-    sf->type = type;
-
-    return 1;
-}
-
-weights_type_t
-scale_fct_type_get(const scale_fct_t *sf)
-{
-    if (!sf)
-        return SW_WEIGHTS_TYPE_ERROR;
-
-    return sf->type;
-}
-
-const spline_t *
-scale_fct_spline_get(const scale_fct_t *sf)
+const sw_spline_t *
+sw_scale_fct_spline_get(const sw_scale_fct_t *sf)
 {
     if (!sf)
         return NULL;
@@ -554,37 +525,37 @@ scale_fct_spline_get(const scale_fct_t *sf)
 }
 
 rational_t
-scale_fct_value_rat_get(const scale_fct_t *sf,
-                        const rational_t  *val)
+sw_scale_fct_value_rat_get(const sw_scale_fct_t *sf,
+			   const rational_t     *val)
 {
     if (!sf)
         return rat_new(0, 1, 0);
 
-    return spline_value_rat_get(sf->spline, val);
+    return sw_spline_value_rat_get(sf->spline, val);
 }
 
 double
-scale_fct_value_get(const scale_fct_t *sf,
-                    double             val)
+sw_scale_fct_value_get(const sw_scale_fct_t *sf,
+		       double             val)
 {
-    return spline_value_get(sf->spline, val);
+    return sw_spline_value_get(sf->spline, val);
 }
 
 void
-scale_fct_proj_periodic_backward(const scale_fct_t *sf,
-                                 int32_t            scale,
-                                 const double      *ps,
-                                 double            *f2)
+sw_scale_fct_proj_periodic_backward(const sw_scale_fct_t *sf,
+				    int32_t               scale,
+				    const double         *ps,
+				    double               *f2)
 {
     if (sf)
         sf->proj_periodic_backward(sf, scale, ps, f2);
 }
 
 void
-scale_fct_proj_dirichlet_backward(const scale_fct_t *sf,
-                                  int32_t            scale,
-                                  const double      *ps,
-                                  double            *f2)
+sw_scale_fct_proj_dirichlet_backward(const sw_scale_fct_t *sf,
+				     int32_t               scale,
+				     const double      *ps,
+				     double            *f2)
 {
     if (sf)
         sf->proj_dirichlet_backward(sf, scale, ps, f2);
@@ -592,11 +563,11 @@ scale_fct_proj_dirichlet_backward(const scale_fct_t *sf,
 
 /* dual scale function methods */
 
-scale_fct_dual_t *
-scale_fct_dual_new(int32_t order,
-                   int32_t order_dual)
+sw_scale_fct_dual_t *
+sw_scale_fct_dual_new(int32_t order,
+		      int32_t order_dual)
 {
-    scale_fct_dual_t *sf;
+    sw_scale_fct_dual_t *sf;
 
     if ((order <= 0) || (order_dual <= 0))
         return NULL;
@@ -604,13 +575,13 @@ scale_fct_dual_new(int32_t order,
     if (((order + order_dual) & 1) == 1)
         return NULL;
 
-    sf = (scale_fct_dual_t *)malloc(sizeof(scale_fct_dual_t));
+    sf = (sw_scale_fct_dual_t *)calloc(1, sizeof(sw_scale_fct_dual_t));
     if (!sf)
         return NULL;
 
-    sf->scale_fct_base = scale_fct_base_new(-(order_dual >> 1) - ((order + order_dual) >> 1) + 1,
+    sf->scale_fct_base = sw_scale_fct_base_new(-(order_dual >> 1) - ((order + order_dual) >> 1) + 1,
                                             -(order_dual >> 1) + ((order + order_dual) >> 1) + order_dual - 1,
-                                            scale_fct_dual_filter_get(order, order_dual));
+                                            sw_scale_fct_dual_filter_get(order, order_dual));
     sf->order = order;
     sf->order_dual = order_dual;
 
@@ -618,20 +589,20 @@ scale_fct_dual_new(int32_t order,
 }
 
 void
-scale_fct_dual_del(scale_fct_dual_t *sf)
+sw_scale_fct_dual_del(sw_scale_fct_dual_t *sf)
 {
     if (!sf)
         return;
 
-    if (sf->weights) weights_del(sf->weights);
-    scale_fct_base_del(&sf->scale_fct_base);
+    if (sf->weights) sw_weights_del(sf->weights);
+    sw_scale_fct_base_del(&sf->scale_fct_base);
     free(sf);
 }
 
 uint8_t
-scale_fct_dual_type_set(scale_fct_dual_t *sf,
-                        weights_type_t    type,
-                        ...)
+sw_scale_fct_dual_type_set(sw_scale_fct_dual_t *sf,
+			   sw_weights_type_t       type,
+			   ...)
 {
     va_list va;
 
@@ -653,8 +624,8 @@ scale_fct_dual_type_set(scale_fct_dual_t *sf,
              va_end(va);
              return 0;
          }
-         sf->proj_periodic_forward = scale_fct_dual_inner_product_lagrange_periodic_forward;
-         sf->proj_dirichlet_forward = scale_fct_dual_inner_product_lagrange_dirichlet_forward;
+         sf->proj_periodic_forward = sw_scale_fct_dual_inner_product_lagrange_periodic_forward;
+         sf->proj_dirichlet_forward = sw_scale_fct_dual_inner_product_lagrange_dirichlet_forward;
          break;
      }
      case SW_WEIGHTS_TYPE_SWELDENS:
@@ -680,12 +651,13 @@ scale_fct_dual_type_set(scale_fct_dual_t *sf,
     va_end(va);
 
     sf->type = type;
+    printf(" $$ %p\n", sf->weights);
 
     return 1;
 }
 
-weights_type_t
-scale_fct_dual_type_get(const scale_fct_dual_t *sf)
+sw_weights_type_t
+sw_scale_fct_dual_type_get(const sw_scale_fct_dual_t *sf)
 {
     if (!sf)
         return SW_WEIGHTS_TYPE_ERROR;
@@ -694,28 +666,30 @@ scale_fct_dual_type_get(const scale_fct_dual_t *sf)
 }
 
 void
-scale_fct_dual_proj_periodic_forward(const scale_fct_dual_t *sfd,
-                                     int32_t                 scale,
-                                     const double           *function,
-                                     double                 *ps)
+sw_scale_fct_dual_proj_periodic_forward(const sw_scale_fct_dual_t *sfd,
+					int32_t                    scale,
+					const double              *function,
+					double                     *ps)
 {
     if (sfd)
         sfd->proj_periodic_forward(sfd, scale, function, ps);
 }
 
 void
-scale_fct_dual_proj_dirichlet_forward(const scale_fct_dual_t *sfd,
-                                      int32_t                 scale,
-                                      const double           *function,
-                                      double                 *ps)
+sw_scale_fct_dual_proj_dirichlet_forward(const sw_scale_fct_dual_t *sfd,
+					 int32_t                    scale,
+					 const double              *function,
+					 double                    *ps)
 {
     if (sfd)
         sfd->proj_dirichlet_forward(sfd, scale, function, ps);
 }
 
 const double *
-scale_fct_dual_weights_get(const scale_fct_dual_t *sfd,
-                           int32_t                *size)
+sw_scale_fct_dual_weights_get(const sw_scale_fct_dual_t *sfd,
+			      int32_t                   *size)
 {
-    return weights_get(sfd->weights, size);
+  printf(" ** %p\n", sfd);
+  printf(" ** %p\n", sfd->weights);
+    return sw_weights_get(sfd->weights, size);
 }

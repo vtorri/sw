@@ -1,9 +1,9 @@
 
 /**
- * @struct wavelet_base
+ * @struct sw_wavelet_base_s
  * @brief Type for a base class of a wavelet function.
  */
-struct wavelet_base
+struct sw_wavelet_base_s
 {
     rational_t *filter_rat; /**< filter with rational values */
     double     *filter;     /**< filter with real values */
@@ -19,10 +19,10 @@ struct wavelet_base
  *
  * This function returns the value of the inferior bound of the
  * support of the filter of the wavelet function @p wb. @p wb must be a
- * wavelet function created by wavelet_new() or wavelet_dual_new().
+ * wavelet function created by sw_wavelet_new() or sw_wavelet_dual_new().
  */
 static __inline__ int32_t
-wavelet_base_N1_get(const wavelet_base_t *wb)
+sw_wavelet_base_N1_get(const sw_wavelet_base_t *wb)
 {
     return wb->N1;
 }
@@ -35,10 +35,10 @@ wavelet_base_N1_get(const wavelet_base_t *wb)
  *
  * This function returns the value of the superior bound of the
  * support of the filter of the wavelet function @p wb. @p wb must be a
- * wavelet function created by wavelet_new() or wavelet_dual_new().
+ * wavelet function created by sw_wavelet_new() or sw_wavelet_dual_new().
  */
 static __inline__ int32_t
-wavelet_base_N2_get(const wavelet_base_t *wb)
+sw_wavelet_base_N2_get(const sw_wavelet_base_t *wb)
 {
     return wb->N2;
 }
@@ -53,12 +53,12 @@ wavelet_base_N2_get(const wavelet_base_t *wb)
  * wavelet function @p wb. The size of the array is (order + (order_dual * 2) - 1) if @p wb
  * is a wavelet function and is (order + 1) if @p wb
  * is a dual wavelet function. In both cases, it can be computed with
- * the values returned by wavelet_base_N1_get() and
- * wavelet_base_N2_get(). @p wb must be a wavelet function created by
- * wavelet_new() or wavelet_dual_new().
+ * the values returned by sw_wavelet_base_N1_get() and
+ * sw_wavelet_base_N2_get(). @p wb must be a wavelet function created by
+ * sw_wavelet_new() or sw_wavelet_dual_new().
  */
 static __inline__ const rational_t *
-wavelet_base_filter_rat_get(const wavelet_base_t *wb)
+sw_wavelet_base_filter_rat_get(const sw_wavelet_base_t *wb)
 {
     return wb->filter_rat;
 }
@@ -73,12 +73,12 @@ wavelet_base_filter_rat_get(const wavelet_base_t *wb)
  * wavelet function @p wb. The size of the array is (order + (order_dual * 2) - 1) if @p wb
  * is a wavelet function and is (order + 1) if @p wb
  * is a dual wavelet function. In both cases, it can be computed with
- * the values returned by wavelet_base_N1_get() and
- * wavelet_base_N2_get(). @p wb must be a wavelet function created by
- * wavelet_new() or wavelet_dual_new().
+ * the values returned by sw_wavelet_base_N1_get() and
+ * sw_wavelet_base_N2_get(). @p wb must be a wavelet function created by
+ * sw_wavelet_new() or sw_wavelet_dual_new().
  */
 static __inline__ const double *
-wavelet_base_filter_get(const wavelet_base_t *wb)
+sw_wavelet_base_filter_get(const sw_wavelet_base_t *wb)
 {
     return wb->filter;
 }

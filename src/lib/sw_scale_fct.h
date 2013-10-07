@@ -38,7 +38,7 @@
  * is not used anymore, its memory must be freed with
  * scale_fct_del().
  */
-SAPI scale_fct_t *scale_fct_new(int32_t order);
+SAPI sw_scale_fct_t *sw_scale_fct_new(int32_t order);
 
 /**
  * @brief Free the memory of the given scale function.
@@ -46,10 +46,10 @@ SAPI scale_fct_t *scale_fct_new(int32_t order);
  * @param sf The scale function to free.
  *
  * This function frees the memory of the scale function @p sf. @p sf
- * must have been created with scale_fct_new(). If @p sf is @c NULL,
+ * must have been created with sw_scale_fct_new(). If @p sf is @c NULL,
  * this function does nothing.
  */
-SAPI void scale_fct_del(scale_fct_t *sf);
+SAPI void sw_scale_fct_del(sw_scale_fct_t *sf);
 
 /**
  * @brief Set the type of weights to use for the given scale function.
@@ -62,8 +62,8 @@ SAPI void scale_fct_del(scale_fct_t *sf);
  * @p sf. If @p sf is @c NULL or @p type is invalid, 0 is returned,
  * otherwise, 1 is returned.
  */
-SAPI uint8_t scale_fct_type_set(scale_fct_t   *sf,
-                                weights_type_t type);
+SAPI uint8_t sw_scale_fct_type_set(sw_scale_fct_t   *sf,
+				   sw_weights_type_t type);
 
 /**
  * @brief Get the type of weights for the given scale function.
@@ -75,7 +75,7 @@ SAPI uint8_t scale_fct_type_set(scale_fct_t   *sf,
  * @p sf. If @p sf is @c NULL, #SW_WEIGHTS_TYPE_ERROR is returned,
  * otherwise, the type of weights is returned.
  */
-SAPI weights_type_t scale_fct_type_get(const scale_fct_t *sf);
+SAPI sw_weights_type_t sw_scale_fct_type_get(const sw_scale_fct_t *sf);
 
 /**
  * @brief Return the spline function associated to the given scale function.
@@ -86,7 +86,7 @@ SAPI weights_type_t scale_fct_type_get(const scale_fct_t *sf);
  * This function returns the spline function associated to @p sf. if
  * @p sf is @c NULL, this function returns @c NULL.
  */
-SAPI const spline_t *scale_fct_spline_get(const scale_fct_t *sf);
+SAPI const sw_spline_t *sw_scale_fct_spline_get(const sw_scale_fct_t *sf);
 
 /**
  * @brief Return the rational value of the given scale function at the given
@@ -99,8 +99,8 @@ SAPI const spline_t *scale_fct_spline_get(const scale_fct_t *sf);
  * This function returns the rational value of the scale function @p sf at
  * the rational absciss @p val.
  */
-SAPI rational_t scale_fct_value_rat_get(const scale_fct_t *sf,
-                                        const rational_t  *val);
+SAPI rational_t sw_scale_fct_value_rat_get(const sw_scale_fct_t *sf,
+					   const rational_t     *val);
 
 /**
  * @brief Return the real value of the given scale function at the given real
@@ -113,8 +113,8 @@ SAPI rational_t scale_fct_value_rat_get(const scale_fct_t *sf,
  * This function return the rational value of the scale function @p sf at
  * the rational absciss @p val.
  */
-SAPI double scale_fct_value_get(const scale_fct_t *sf,
-                                double             val);
+SAPI double sw_scale_fct_value_get(const sw_scale_fct_t *sf,
+				   double                val);
 
 /**
  * @brief Apply the backward projection of a function onto the vector space of
@@ -132,10 +132,10 @@ SAPI double scale_fct_value_get(const scale_fct_t *sf,
  * size @c 2 power @p scale. The result is stored in @p function, which also
  * must be an array of size @c 2 power @p scale.
  */
-SAPI void scale_fct_proj_periodic_backward(const scale_fct_t *sf,
-                                           int32_t            scale,
-                                           const double      *ps,
-                                           double            *function);
+SAPI void sw_scale_fct_proj_periodic_backward(const sw_scale_fct_t *sf,
+					      int32_t               scale,
+					      const double         *ps,
+					      double               *function);
 
 /**
  * @brief Apply the backward projection of a function onto the vector space of
@@ -153,10 +153,10 @@ SAPI void scale_fct_proj_periodic_backward(const scale_fct_t *sf,
  * size @c 2 power(@p scale + 1). The result is stored in @p function,
  * which also must be an array of size @c 2 power(@p scale + 1).
  */
-SAPI void scale_fct_proj_dirichlet_backward(const scale_fct_t *sf,
-                                            int32_t            scale,
-                                            const double      *ps,
-                                            double            *function);
+SAPI void sw_scale_fct_proj_dirichlet_backward(const sw_scale_fct_t *sf,
+					       int32_t               scale,
+					       const double         *ps,
+					       double               *function);
 
 /* dual scale function methods */
 
@@ -174,8 +174,8 @@ SAPI void scale_fct_proj_dirichlet_backward(const scale_fct_t *sf,
  * with the base class methods. When the scale function is not used
  * anymore, its memory must be freed with scale_fct_dual_del().
  */
-SAPI scale_fct_dual_t *scale_fct_dual_new(int32_t        order,
-                                          int32_t        order_dual);
+SAPI sw_scale_fct_dual_t *sw_scale_fct_dual_new(int32_t        order,
+						int32_t        order_dual);
 
 /**
  * @brief Free the memory of the given dual scale function.
@@ -183,10 +183,10 @@ SAPI scale_fct_dual_t *scale_fct_dual_new(int32_t        order,
  * @param sfd The dual scale function to free.
  *
  * This function frees the memory of the dual scale function @p sfd. @p sfd
- * must have been created with scale_fct_dual_new(). If @p sfd is @c NULL,
+ * must have been created with sw_scale_fct_dual_new(). If @p sfd is @c NULL,
  * this function does nothing.
  */
-SAPI void scale_fct_dual_del(scale_fct_dual_t *sfd);
+SAPI void sw_scale_fct_dual_del(sw_scale_fct_dual_t *sfd);
 
 /**
  * @brief Set the type of weights to use for the given dual scale function.
@@ -201,9 +201,9 @@ SAPI void scale_fct_dual_del(scale_fct_dual_t *sfd);
  *
  * @todo comment va_arg
  */
-SAPI uint8_t scale_fct_dual_type_set(scale_fct_dual_t   *sf,
-                                     weights_type_t      type,
-                                     ...);
+SAPI uint8_t sw_scale_fct_dual_type_set(sw_scale_fct_dual_t   *sf,
+					sw_weights_type_t      type,
+					...);
 
 /**
  * @brief Get the type of weights for the given dual scale function.
@@ -215,7 +215,7 @@ SAPI uint8_t scale_fct_dual_type_set(scale_fct_dual_t   *sf,
  * @p sf. If @p sf is @c NULL, #SW_WEIGHTS_TYPE_ERROR is returned,
  * otherwise, the type of weights is returned.
  */
-SAPI weights_type_t scale_fct_dual_type_get(const scale_fct_dual_t *sf);
+SAPI sw_weights_type_t sw_scale_fct_dual_type_get(const sw_scale_fct_dual_t *sf);
 
 /**
  * @brief Apply the forward projection of a function onto the vector space of
@@ -233,10 +233,10 @@ SAPI weights_type_t scale_fct_dual_type_get(const scale_fct_dual_t *sf);
  * @p scale. The computed inner products are stored in @p ps, which
  * also must be an array of size @c 2 power @p scale.
  */
-SAPI void scale_fct_dual_proj_periodic_forward(const scale_fct_dual_t *sfd,
-                                               int32_t                 scale,
-                                               const double           *function,
-                                               double                 *ps);
+SAPI void sw_scale_fct_dual_proj_periodic_forward(const sw_scale_fct_dual_t *sfd,
+						  int32_t                    scale,
+						  const double              *function,
+						  double                    *ps);
 
 /**
  * @brief Apply the forward projection of a function onto the vector space of
@@ -254,10 +254,10 @@ SAPI void scale_fct_dual_proj_periodic_forward(const scale_fct_dual_t *sfd,
  * (@p scale + 1). The computed inner products are stored in @p ps,
  * which also must be an array of size @c 2 power(@p scale + 1).
  */
-SAPI void scale_fct_dual_proj_dirichlet_forward(const scale_fct_dual_t *sfd,
-                                                int32_t                 scale,
-                                                const double           *function,
-                                                double                 *ps);
+SAPI void sw_scale_fct_dual_proj_dirichlet_forward(const sw_scale_fct_dual_t *sfd,
+						   int32_t                    scale,
+						   const double              *function,
+						   double                    *ps);
 
 /**
  * @brief Return the data of the given weights, according to the type
@@ -276,8 +276,8 @@ SAPI void scale_fct_dual_proj_dirichlet_forward(const scale_fct_dual_t *sfd,
  * Note that in the Lagrange case,  @p weights_size is the degree of
  * the Lagrange polynomial + 1.
  */
-SAPI const double *scale_fct_dual_weights_get(const scale_fct_dual_t *sfd,
-                                              int32_t                *size);
+SAPI const double *sw_scale_fct_dual_weights_get(const sw_scale_fct_dual_t *sfd,
+						 int32_t                   *size);
 
 
 #endif /* SW_SCALE_FCT_H */

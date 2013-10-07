@@ -15,22 +15,22 @@
 
 
 /**
- * @typedef wavelet_base_t
+ * @typedef sw_wavelet_base_t
  * @brief Opaque type for a base class of a wavelet function.
  */
-typedef struct wavelet_base wavelet_base_t;
+typedef struct sw_wavelet_base_s sw_wavelet_base_t;
 
 /**
- * @typedef wavelet_t
+ * @typedef sw_wavelet_t
  * @brief Opaque type for a wavelet function.
  */
-typedef struct wavelet      wavelet_t;
+typedef struct sw_wavelet_s sw_wavelet_t;
 
 /**
- * @typedef wavelet_dual_t
+ * @typedef sw_wavelet_dual_t
  * @brief Opaque type for a dual wavelet function.
  */
-typedef struct wavelet_dual wavelet_dual_t;
+typedef struct sw_wavelet_dual_s sw_wavelet_dual_t;
 
 
 /* wavelet function - base class methods */
@@ -54,10 +54,10 @@ typedef struct wavelet_dual wavelet_dual_t;
  * coefficient of @p sdf. If @p sf or @p sfd are @c NULL, @c NULL is
  * returned. The filter and bounds of the wavelet function are
  * retrieved using the wavelet base class. When the returned wavelet is
- * not needed anymore, it must be freed with wavelet_del().
+ * not needed anymore, it must be freed with sw_wavelet_del().
  */
-SAPI wavelet_t *wavelet_new(const scale_fct_t      *sf,
-                            const scale_fct_dual_t *sfd);
+SAPI sw_wavelet_t *sw_wavelet_new(const sw_scale_fct_t      *sf,
+				  const sw_scale_fct_dual_t *sfd);
 
 /**
  * @brief Free the memory of the given wavelet function.
@@ -65,10 +65,10 @@ SAPI wavelet_t *wavelet_new(const scale_fct_t      *sf,
  * @param w The wavelet function to free.
  *
  * This function frees the memory of the wavelet function @p w. @p w
- * must have been created with wavelet_new(). If @p w is @c NULL,
+ * must have been created with sw_wavelet_new(). If @p w is @c NULL,
  * this function does nothing.
  */
-SAPI void wavelet_del(wavelet_t *w);
+SAPI void sw_wavelet_del(sw_wavelet_t *w);
 
 /**
  * @brief Return the inferior bound of the support of the given wavelet function.
@@ -80,7 +80,7 @@ SAPI void wavelet_del(wavelet_t *w);
  * wavelet function @p w. No test are done on @p w. If @p w is not
  * valid, a seg fault or an undefined behavior might occur.
  */
-SAPI int32_t wavelet_x1_get(const wavelet_t *w);
+SAPI int32_t sw_wavelet_x1_get(const sw_wavelet_t *w);
 
 /**
  * @brief Return the superior bound of the support of the given wavelet function.
@@ -92,7 +92,7 @@ SAPI int32_t wavelet_x1_get(const wavelet_t *w);
  * wavelet function @p w. No test are done on @p w. If @p w is not
  * valid, a seg fault or an undefined behavior might occur.
  */
-SAPI int32_t wavelet_x2_get(const wavelet_t *w);
+SAPI int32_t sw_wavelet_x2_get(const sw_wavelet_t *w);
 
 /**                                          
  * @brief Return the rational value of the given wavelet function at the given
@@ -105,8 +105,8 @@ SAPI int32_t wavelet_x2_get(const wavelet_t *w);
  * This function returns the rational value of the wavelet function @p wd at
  * the rational absciss @p val.
  */
-SAPI rational_t wavelet_value_rat_get(const wavelet_t  *wd,
-                                      const rational_t *val);
+SAPI rational_t sw_wavelet_value_rat_get(const sw_wavelet_t  *wd,
+					 const rational_t    *val);
 
 /**
  * @brief Return the real value of the given scale function at the given real
@@ -119,10 +119,8 @@ SAPI rational_t wavelet_value_rat_get(const wavelet_t  *wd,
  * This function return the rational value of the scale function @p wd at
  * the rational absciss @p val.
  */
-
-SAPI double wavelet_value_get(const wavelet_t *wd,
-                              double           val);
-
+SAPI double sw_wavelet_value_get(const sw_wavelet_t *wd,
+				 double              val);
 
 /*
  * dual wavelet function methods
@@ -140,10 +138,10 @@ SAPI double wavelet_value_get(const wavelet_t *wd,
  * coefficient of @p sd. If @p sf or @p sfd are @c NULL, @c NULL is
  * returned. The filter and bounds of the wavelet function are
  * retrieved using the wavelet base class. When the returned wavelet is
- * not needed anymore, it must be freed with wavelet_del().
+ * not needed anymore, it must be freed with sw_wavelet_del().
  */
-SAPI wavelet_dual_t   *wavelet_dual_new(const scale_fct_t *sf,
-                                        const scale_fct_dual_t *sfd);
+SAPI sw_wavelet_dual_t   *sw_wavelet_dual_new(const sw_scale_fct_t *sf,
+					      const sw_scale_fct_dual_t *sfd);
 
 /**
  * @brief Free the memory of the given dual wavelet function.
@@ -151,10 +149,10 @@ SAPI wavelet_dual_t   *wavelet_dual_new(const scale_fct_t *sf,
  * @param wd The dual wavelet function to free.
  *
  * This function frees the memory of the dual wavelet function @p wd. @p wd
- * must have been created with wavelet_dual_new(). If @p wd is @c NULL,
+ * must have been created with sw_wavelet_dual_new(). If @p wd is @c NULL,
  * this function does nothing.
  */
-SAPI void wavelet_dual_del(wavelet_dual_t *wd);
+SAPI void sw_wavelet_dual_del(sw_wavelet_dual_t *wd);
 
 /**
  * @brief Return the inferior bound of the support of the given dual wavelet function.
@@ -166,7 +164,7 @@ SAPI void wavelet_dual_del(wavelet_dual_t *wd);
  * dual wavelet function @p wd. No test are done on @p wd. If @p wd is not
  * valid, a seg fault or an undefined behavior might occur.
  */
-SAPI int32_t wavelet_dual_x1_get(const wavelet_dual_t *wd);
+SAPI int32_t sw_wavelet_dual_x1_get(const sw_wavelet_dual_t *wd);
 
 /**
  * @brief Return the superior bound of the support of the given dual wavelet function.
@@ -178,7 +176,7 @@ SAPI int32_t wavelet_dual_x1_get(const wavelet_dual_t *wd);
  * dual wavelet function @p wd. No test are done on @p wd. If @p wd is not
  * valid, a seg fault or an undefined behavior might occur.
  */
-SAPI int32_t wavelet_dual_x2_get(const wavelet_dual_t *wd);
+SAPI int32_t sw_wavelet_dual_x2_get(const sw_wavelet_dual_t *wd);
 
 
 #endif /* SW_WAVELET_H */

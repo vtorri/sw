@@ -22,7 +22,7 @@
  * @cond SW_LOCAL
  */
 
-struct spline
+struct spline_s
 {
     int32_t     order;
     int64_t     x1;
@@ -34,7 +34,7 @@ struct spline
 };
 
 static rational_t *
-spline_primitive_rat_get(spline_t *spline)
+_sw_spline_primitive_rat_get(sw_spline_t *spline)
 {
     rational_t *primitive;
     rational_t  tmp1;
@@ -114,11 +114,11 @@ spline_primitive_rat_get(spline_t *spline)
 /*                                                                            */
 /******************************************************************************/
 
-spline_t *
-spline_new (int32_t order)
+sw_spline_t *
+sw_spline_new (int32_t order)
 {
     rational_t        integral;
-    spline_t         *spline;
+    sw_spline_t      *spline;
     system_t         *s;
     rpol_t           *pol;
     rational_t       *matrix;
@@ -242,7 +242,7 @@ spline_new (int32_t order)
         return NULL;
     }
 
-    spline = (spline_t *)malloc(sizeof(spline_t));
+    spline = (sw_spline_t *)malloc(sizeof(sw_spline_t));
     if (!spline)
     {
         system_delete(s);
@@ -293,7 +293,7 @@ spline_new (int32_t order)
         spline->coefs[i] = rat_double_get(&val);
     }
 
-    spline->rat_coefs_primitive = spline_primitive_rat_get(spline);
+    spline->rat_coefs_primitive = _sw_spline_primitive_rat_get(spline);
     if (!spline->rat_coefs_primitive)
     {
         free(spline->coefs);
@@ -327,7 +327,7 @@ spline_new (int32_t order)
 }
 
 void
-spline_del(spline_t *spline)
+sw_spline_del(sw_spline_t *spline)
 {
     if (!spline)
         return;
@@ -340,7 +340,7 @@ spline_del(spline_t *spline)
 }
 
 int32_t
-spline_order_get(const spline_t *spline)
+sw_spline_order_get(const sw_spline_t *spline)
 {
     if (!spline)
     {
@@ -352,7 +352,7 @@ spline_order_get(const spline_t *spline)
 }
 
 int64_t
-spline_x1_get(const spline_t *spline)
+sw_spline_x1_get(const sw_spline_t *spline)
 {
     if (!spline)
     {
@@ -364,7 +364,7 @@ spline_x1_get(const spline_t *spline)
 }
 
 int64_t
-spline_x2_get(const spline_t *spline)
+sw_spline_x2_get(const sw_spline_t *spline)
 {
     if (!spline)
     {
@@ -376,7 +376,7 @@ spline_x2_get(const spline_t *spline)
 }
 
 const rational_t *
-spline_rat_coef_get(const spline_t *spline)
+sw_spline_rat_coef_get(const sw_spline_t *spline)
 {
     if (!spline)
         return NULL;
@@ -385,7 +385,7 @@ spline_rat_coef_get(const spline_t *spline)
 }
 
 const double *
-spline_coef_get(const spline_t *spline)
+sw_spline_coef_get(const sw_spline_t *spline)
 {
     if (!spline)
         return NULL;
@@ -394,7 +394,7 @@ spline_coef_get(const spline_t *spline)
 }
 
 rational_t
-spline_value_rat_get(const spline_t *spline, const rational_t *val)
+sw_spline_value_rat_get(const sw_spline_t *spline, const rational_t *val)
 {
     rational_t tmp;
     rational_t res;
@@ -419,7 +419,7 @@ spline_value_rat_get(const spline_t *spline, const rational_t *val)
 }
 
 double
-spline_value_get(const spline_t *spline, double val)
+sw_spline_value_get(const sw_spline_t *spline, double val)
 {
     const double *coefs;
     const double *tmp;
@@ -450,7 +450,7 @@ spline_value_get(const spline_t *spline, double val)
 }
 
 double
-spline_integral_value_get(const spline_t *spline, double x1, double x2)
+sw_spline_integral_value_get(const sw_spline_t *spline, double x1, double x2)
 {
     const double *coefs;
     const double *tmp;
@@ -560,7 +560,7 @@ spline_integral_value_get(const spline_t *spline, double x1, double x2)
 }
 
 rational_t
-spline_integral_value_rat_get(const spline_t *spline, int x1, int x2)
+sw_spline_integral_value_rat_get(const sw_spline_t *spline, int x1, int x2)
 {
     const rational_t *coefs;
     const rational_t *tmp;

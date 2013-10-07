@@ -20,7 +20,7 @@
  * @cond SW_LOCAL
  */
 
-struct weights
+struct sw_weights_s
 {
     double *weights;
     int32_t size;
@@ -30,7 +30,7 @@ struct weights
 
 /* compute \int x^i\phi for i = 0 to order (inclusive) */
 static rational_t *
-_sw_moments_lagrange_get(const scale_fct_base_t *sfb, int32_t order)
+_sw_moments_lagrange_get(const sw_scale_fct_base_t *sfb, int32_t order)
 {
     const rational_t *filter_rat;
     rational_t       *moments;
@@ -45,9 +45,9 @@ _sw_moments_lagrange_get(const scale_fct_base_t *sfb, int32_t order)
     if (!moments)
         return NULL;
 
-    N1 = scale_fct_base_N1_get(sfb);
-    N2 = scale_fct_base_N2_get(sfb);
-    filter_rat = scale_fct_base_filter_rat_get(sfb);
+    N1 = sw_scale_fct_base_N1_get(sfb);
+    N2 = sw_scale_fct_base_N2_get(sfb);
+    filter_rat = sw_scale_fct_base_filter_rat_get(sfb);
 
     moments[0] = rat_new(1, 1, 0);
     for (m = 1; m <= order; m++)
@@ -190,7 +190,7 @@ _sw_coefs_sweldens_get(int32_t r, rational_t *lambda, int32_t *size)
 }
 
 static rational_t *
-_sw_moments_sweldens_get(const scale_fct_base_t *sfb, int r)
+_sw_moments_sweldens_get(const sw_scale_fct_base_t *sfb, int r)
 {
     const rational_t *filter_rat;
     rational_t       *moments;
@@ -206,10 +206,10 @@ _sw_moments_sweldens_get(const scale_fct_base_t *sfb, int r)
     if (!moments)
         return NULL;
 
-    N1 = scale_fct_base_N1_get(sfb);
-    N2 = scale_fct_base_N2_get(sfb);
+    N1 = sw_scale_fct_base_N1_get(sfb);
+    N2 = sw_scale_fct_base_N2_get(sfb);
     L = N2 - N1;
-    filter_rat = scale_fct_base_filter_rat_get(sfb);
+    filter_rat = sw_scale_fct_base_filter_rat_get(sfb);
 
     moments[0] = rat_new(1, 1, 0);
     idx = 0;
@@ -275,18 +275,18 @@ _sw_moments_sweldens_get(const scale_fct_base_t *sfb, int r)
 /*                                                                            */
 /******************************************************************************/
 
-weights_t *
-sw_weights_lagrange_new(const scale_fct_base_t *sfb, int32_t degree)
+sw_weights_t *
+sw_weights_lagrange_new(const sw_scale_fct_base_t *sfb, int32_t degree)
 {
-    weights_t  *weights;
-    rational_t *moments;
-    int64_t    *x;
-    int32_t     i;
+    sw_weights_t *weights;
+    rational_t   *moments;
+    int64_t      *x;
+    int32_t       i;
 
     if (!sfb || (degree <= 0))
         return NULL;
 
-    weights = (weights_t *)malloc(sizeof (weights_t));
+    weights = (sw_weights_t *)malloc(sizeof (sw_weights_t));
     if (!weights)
         return NULL;
 
@@ -341,35 +341,35 @@ sw_weights_lagrange_new(const scale_fct_base_t *sfb, int32_t degree)
     return NULL;
 }
 
-weights_t *
-sw_weights_sweldens_new(const scale_fct_base_t *sfb, int32_t r, int32_t s)
+sw_weights_t *
+sw_weights_sweldens_new(const sw_scale_fct_base_t *sfb, int32_t r, int32_t s)
 {
-    weights_t  *weights;
-    system_t   *system;
-    rpol_t    **cheb;
-    rational_t *moments;
-    rational_t *matrix;
-    rational_t *iter;
-    rational_t *abscisses; /* x_k^* */
-    rational_t *sol;
-    rational_t  tau_s;     /* Tau^* */
-    int32_t     N1;
-    int32_t     N2;
-    int32_t     L;
-    int32_t     i;
-    int32_t     k;
+    sw_weights_t *weights;
+    system_t     *system;
+    rpol_t      **cheb;
+    rational_t   *moments;
+    rational_t   *matrix;
+    rational_t   *iter;
+    rational_t   *abscisses; /* x_k^* */
+    rational_t   *sol;
+    rational_t    tau_s;     /* Tau^* */
+    int32_t       N1;
+    int32_t       N2;
+    int32_t       L;
+    int32_t       i;
+    int32_t       k;
 
     if (!sfb || (r < 0) || (s < 0))
         return NULL;
 
-    N1 = scale_fct_base_N1_get(sfb);
-    N2 = scale_fct_base_N2_get(sfb);
+    N1 = sw_scale_fct_base_N1_get(sfb);
+    N2 = sw_scale_fct_base_N2_get(sfb);
     L = N2 - N1;
 
     /* tau_s = (dr_s - 1) / 2 */
     tau_s = rat_new((r - 1) - L * (1 << (s - 1)), L * (1 << s), 1);
 
-    weights = (weights_t *)malloc(sizeof (weights_t));
+    weights = (sw_weights_t *)malloc(sizeof (sw_weights_t));
     if (!weights)
         return NULL;
 
@@ -447,7 +447,7 @@ sw_weights_sweldens_new(const scale_fct_base_t *sfb, int32_t r, int32_t s)
 }
 
 void
-weights_del (weights_t *w)
+sw_weights_del (sw_weights_t *w)
 {
     if (!w)
         return;
@@ -458,8 +458,8 @@ weights_del (weights_t *w)
 }
 
 const double *
-weights_get(const weights_t *w,
-            int32_t         *weights_size)
+sw_weights_get(const sw_weights_t *w,
+	       int32_t            *weights_size)
 {
     if (!w || !weights_size)
         return NULL;

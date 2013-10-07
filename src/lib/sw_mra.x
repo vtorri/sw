@@ -1,6 +1,6 @@
 
 static __inline__ int32_t
-mra_size_x_get(const mra_t *mra)
+sw_mra_size_x_get(const sw_mra_t *mra)
 {
     if (mra)
         return mra->size_x;
@@ -9,7 +9,7 @@ mra_size_x_get(const mra_t *mra)
 }
 
 static __inline__ int32_t
-mra_size_v_get(const mra_t *mra)
+sw_mra_size_v_get(const sw_mra_t *mra)
 {
     if (mra)
         return mra->size_v;
@@ -18,7 +18,7 @@ mra_size_v_get(const mra_t *mra)
 }
 
 static __inline__ int32_t
-mra_size_inf_x_get(const mra_t *mra)
+sw_mra_size_inf_x_get(const sw_mra_t *mra)
 {
     if (mra)
         return mra->lambda_fine_x_inf;
@@ -27,7 +27,7 @@ mra_size_inf_x_get(const mra_t *mra)
 }
 
 static __inline__ int32_t
-mra_size_inf_v_get(const mra_t *mra)
+sw_mra_size_inf_v_get(const sw_mra_t *mra)
 {
     if (mra)
         return mra->lambda_fine_v_inf;
@@ -36,7 +36,7 @@ mra_size_inf_v_get(const mra_t *mra)
 }
 
 static __inline__ int32_t
-mra_size_sup_x_get(const mra_t *mra)
+sw_mra_size_sup_x_get(const sw_mra_t *mra)
 {
     if (mra)
         return mra->lambda_fine_x_sup;
@@ -45,7 +45,7 @@ mra_size_sup_x_get(const mra_t *mra)
 }
 
 static __inline__ int32_t
-mra_size_sup_v_get(const mra_t *mra)
+sw_mra_size_sup_v_get(const sw_mra_t *mra)
 {
     if (mra)
         return mra->lambda_fine_v_sup;
