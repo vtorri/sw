@@ -75,7 +75,7 @@ sw_mra_new(int32_t order,
 
          degree = va_arg(va, int32_t);
          va_end(va);
-	 sw_scale_fct_dual_type_set(mra->scale_fct_dual, type, degree);
+         sw_scale_fct_dual_type_set(mra->scale_fct_dual, type, degree);
          break;
      }
      case SW_WEIGHTS_TYPE_SWELDENS:
