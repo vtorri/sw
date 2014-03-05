@@ -161,7 +161,7 @@ sw_wavelet_x2_get(const sw_wavelet_t *w)
 
 rational_t
 sw_wavelet_value_rat_get(const sw_wavelet_t *w,
-			  const rational_t   *val)
+                         const rational_t   *val)
 {
     rational_t tmp;
     rational_t res;
@@ -189,7 +189,7 @@ sw_wavelet_value_rat_get(const sw_wavelet_t *w,
 
 double
 sw_wavelet_value_get(const sw_wavelet_t *w,
-		     double              val)
+                     double              val)
 {
     const double *filter;
     double  res;

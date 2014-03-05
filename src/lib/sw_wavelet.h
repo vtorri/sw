@@ -57,7 +57,7 @@ typedef struct sw_wavelet_dual_s sw_wavelet_dual_t;
  * not needed anymore, it must be freed with sw_wavelet_del().
  */
 SAPI sw_wavelet_t *sw_wavelet_new(const sw_scale_fct_t      *sf,
-				  const sw_scale_fct_dual_t *sfd);
+                                  const sw_scale_fct_dual_t *sfd);
 
 /**
  * @brief Free the memory of the given wavelet function.
@@ -94,7 +94,7 @@ SAPI int32_t sw_wavelet_x1_get(const sw_wavelet_t *w);
  */
 SAPI int32_t sw_wavelet_x2_get(const sw_wavelet_t *w);
 
-/**                                          
+/**
  * @brief Return the rational value of the given wavelet function at the given
  * rational absciss.
  *
@@ -106,7 +106,7 @@ SAPI int32_t sw_wavelet_x2_get(const sw_wavelet_t *w);
  * the rational absciss @p val.
  */
 SAPI rational_t sw_wavelet_value_rat_get(const sw_wavelet_t  *wd,
-					 const rational_t    *val);
+                                         const rational_t    *val);
 
 /**
  * @brief Return the real value of the given scale function at the given real
@@ -120,7 +120,7 @@ SAPI rational_t sw_wavelet_value_rat_get(const sw_wavelet_t  *wd,
  * the rational absciss @p val.
  */
 SAPI double sw_wavelet_value_get(const sw_wavelet_t *wd,
-				 double              val);
+                                 double              val);
 
 /*
  * dual wavelet function methods
@@ -140,8 +140,8 @@ SAPI double sw_wavelet_value_get(const sw_wavelet_t *wd,
  * retrieved using the wavelet base class. When the returned wavelet is
  * not needed anymore, it must be freed with sw_wavelet_del().
  */
-SAPI sw_wavelet_dual_t   *sw_wavelet_dual_new(const sw_scale_fct_t *sf,
-					      const sw_scale_fct_dual_t *sfd);
+SAPI sw_wavelet_dual_t *sw_wavelet_dual_new(const sw_scale_fct_t      *sf,
+                                            const sw_scale_fct_dual_t *sfd);
 
 /**
  * @brief Free the memory of the given dual wavelet function.

@@ -41,7 +41,7 @@ typedef struct sw_weights_s sw_weights_t;
  * free its memory with sw_weights_del().
  */
 SAPI sw_weights_t *sw_weights_new(sw_weights_type_t          type,
-				  const sw_scale_fct_base_t *sfb);
+                                  const sw_scale_fct_base_t *sfb);
 
 /**
  * @brief Free the memory of the given weights.
@@ -69,7 +69,7 @@ SAPI void sw_weights_del(sw_weights_t *w);
  * formula.
  */
 SAPI void sw_weights_lagrange_data_set(sw_weights_t *w,
-				       int32_t       degree);
+                                       int32_t       degree);
 
 /**
  * @brief Set the data of the given weights using the Sweldens algorithm.
@@ -90,9 +90,9 @@ SAPI void sw_weights_lagrange_data_set(sw_weights_t *w,
  * formula.
  */
 SAPI void sw_weights_sweldens_data_set(sw_weights_t     *w,
-				       int32_t           order,
-				       int32_t           scale,
-				       const rational_t *tau);
+                                       int32_t           order,
+                                       int32_t           scale,
+                                       const rational_t *tau);
 
 
 SAPI sw_weights_t *
@@ -119,7 +119,7 @@ sw_weights_sweldens_new(const sw_scale_fct_base_t *sfb, int32_t r, int32_t s);
  * the Lagrange polynomial + 1.
  */
 SAPI const double *sw_weights_get(const sw_weights_t *w,
-				  int32_t            *weights_size);
+                                  int32_t            *weights_size);
 
 
 #endif /* SW_WEIGHTS_H */

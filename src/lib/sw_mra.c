@@ -41,11 +41,11 @@
 
 sw_mra_t *
 sw_mra_new(int32_t order,
-	   int32_t order_dual,
-	   int32_t scale_coarse,
-	   int32_t scale_fine,
-	   sw_weights_type_t type,
-	 ...)
+           int32_t order_dual,
+           int32_t scale_coarse,
+           int32_t scale_fine,
+           sw_weights_type_t type,
+           ...)
 {
     sw_mra_t  *mra;
     va_list va;
@@ -161,68 +161,68 @@ sw_mra_scale_fct_dual_get(const sw_mra_t *mra)
 
 void
 sw_mra_proj_x_forward(const sw_mra_t *mra,
-		      const double   *function,
-		      double         *ps)
+                      const double   *function,
+                      double         *ps)
 {
     if (!mra)
         return;
 
     sw_scale_fct_dual_proj_periodic_forward(mra->scale_fct_dual,
-					    mra->scale_fine,
-					    function,
-					    ps);
+                                            mra->scale_fine,
+                                            function,
+                                            ps);
 }
 
 void
 sw_mra_proj_x_backward(const sw_mra_t *mra,
-		       const double   *ps,
-		       double         *function)
+                       const double   *ps,
+                       double         *function)
 {
     if (!mra)
         return;
 
     sw_scale_fct_proj_periodic_backward(mra->scale_fct,
-					mra->scale_fine,
-					ps,
-					function);
+                                        mra->scale_fine,
+                                        ps,
+                    function);
 }
 
 void
 sw_mra_proj_v_forward(const sw_mra_t *mra,
-		      const double   *function,
-		      double         *ps)
+                      const double   *function,
+                      double         *ps)
 {
     if (!mra)
         return;
 
     sw_scale_fct_dual_proj_dirichlet_forward(mra->scale_fct_dual,
-					     mra->scale_fine,
-					     function,
-					     ps);
+                                             mra->scale_fine,
+                                             function,
+                                             ps);
 }
 
 void
 sw_mra_proj_v_backward(const sw_mra_t *mra,
-		       const double   *ps,
-		       double         *function)
+                       const double   *ps,
+                       double         *function)
 {
     if (!mra)
         return;
 
     sw_scale_fct_proj_dirichlet_backward(mra->scale_fct,
-					 mra->scale_fine,
-					 ps,
-					 function);
+                                         mra->scale_fine,
+                                         ps,
+                                         function);
 }
 
 /* Projections 2D */
 
 void
 sw_mra_proj_2d_x_forward(const sw_mra_t *mra,
-			 const double   *function,
-			 double         *ps,
-			 double         *tmp1,
-			 double         *tmp2)
+                         const double   *function,
+                         double         *ps,
+                         double         *tmp1,
+                         double         *tmp2)
 {
     int32_t i;
     int32_t j;
@@ -236,11 +236,11 @@ sw_mra_proj_2d_x_forward(const sw_mra_t *mra,
         {
             tmp1[i] = function[i * mra->size_v + j];
         }
-    
+
         sw_scale_fct_dual_proj_periodic_forward(mra->scale_fct_dual,
-                                              mra->scale_fine,
-                                              tmp1,
-                                              tmp2);
+                                                mra->scale_fine,
+                                                tmp1,
+                                                tmp2);
 
         for (i = 0; i < mra->size_x; i++)
         {
@@ -251,10 +251,10 @@ sw_mra_proj_2d_x_forward(const sw_mra_t *mra,
 
 void
 sw_mra_proj_2d_x_backward(const sw_mra_t *mra,
-			  const double   *ps,
-			  double         *function,
-			  double         *tmp1,
-			  double         *tmp2)
+                          const double   *ps,
+                          double         *function,
+                          double         *tmp1,
+                          double         *tmp2)
 {
     int32_t i;
     int32_t j;
@@ -268,11 +268,11 @@ sw_mra_proj_2d_x_backward(const sw_mra_t *mra,
         {
             tmp1[i] = ps[i * mra->size_v + j];
         }
-    
+
         sw_scale_fct_proj_periodic_backward(mra->scale_fct,
-					    mra->scale_fine,
-					    tmp1,
-					    tmp2);
+                                            mra->scale_fine,
+                                            tmp1,
+                                            tmp2);
 
         for (i = 0; i < mra->size_x; i++)
         {
@@ -283,8 +283,8 @@ sw_mra_proj_2d_x_backward(const sw_mra_t *mra,
 
 void
 sw_mra_proj_2d_v_forward(const sw_mra_t *mra,
-			 const double   *function,
-			 double         *ps)
+                         const double   *function,
+                         double         *ps)
 {
     const double *iter_f;
     double       *iter_ps;
@@ -298,16 +298,16 @@ sw_mra_proj_2d_v_forward(const sw_mra_t *mra,
     for (i = 0; i < mra->size_x; i++, iter_f += mra->size_v, iter_ps += mra->size_v)
     {
         sw_scale_fct_dual_proj_dirichlet_forward(mra->scale_fct_dual,
-						 mra->scale_fine,
-						 iter_f,
-						 iter_ps);
+                                                 mra->scale_fine,
+                                                 iter_f,
+                                                 iter_ps);
     }
 }
 
 void
 sw_mra_proj_2d_v_backward(const sw_mra_t *mra,
-			  const double   *ps,
-			  double         *function)
+                          const double   *ps,
+                          double         *function)
 {
     double       *iter_f;
     const double *iter_ps;
@@ -321,18 +321,18 @@ sw_mra_proj_2d_v_backward(const sw_mra_t *mra,
     for (i = 0; i < mra->size_x; i++, iter_f += mra->size_v, iter_ps += mra->size_v)
     {
         sw_scale_fct_proj_dirichlet_backward(mra->scale_fct,
-					     mra->scale_fine,
-					     iter_ps,
-					     iter_f);
+                                             mra->scale_fine,
+                                             iter_ps,
+                                             iter_f);
     }
 }
 
 void
 sw_mra_proj_2d_forward(const sw_mra_t *mra,
-		       const double   *function,
-		       double         *ps,
-		       double         *tmp1,
-		       double         *tmp2)
+                       const double   *function,
+                       double         *ps,
+                       double         *tmp1,
+                       double         *tmp2)
 {
     const double *iter_f;
     double       *iter_ps;
@@ -348,11 +348,11 @@ sw_mra_proj_2d_forward(const sw_mra_t *mra,
         {
             tmp1[i] = function[i * mra->size_v + j];
         }
-    
+
         sw_scale_fct_dual_proj_periodic_forward(mra->scale_fct_dual,
-						mra->scale_fine,
-						tmp1,
-						tmp2);
+                                                mra->scale_fine,
+                                                tmp1,
+                                                tmp2);
 
         for (i = 0; i < mra->size_x; i++)
         {
@@ -365,18 +365,18 @@ sw_mra_proj_2d_forward(const sw_mra_t *mra,
     for (i = 0; i < mra->size_x; i++, iter_f += mra->size_v, iter_ps += mra->size_v)
     {
         sw_scale_fct_dual_proj_dirichlet_forward(mra->scale_fct_dual,
-						 mra->scale_fine,
-						 iter_f,
-						 iter_ps);
+                                                 mra->scale_fine,
+                                                 iter_f,
+                                                 iter_ps);
     }
 }
 
 void
 sw_mra_proj_2d_backward(const sw_mra_t *mra,
-			const double   *ps,
-			double         *function,
-			double         *tmp1,
-			double         *tmp2)
+                        const double   *ps,
+                        double         *function,
+                        double         *tmp1,
+                        double         *tmp2)
 {
     double       *iter_f;
     const double *iter_ps;
@@ -392,11 +392,11 @@ sw_mra_proj_2d_backward(const sw_mra_t *mra,
         {
             tmp1[i] = ps[i * mra->size_v + j];
         }
-    
+
         sw_scale_fct_proj_periodic_backward(mra->scale_fct,
-					    mra->scale_fine,
-					    tmp1,
-					    tmp2);
+                                            mra->scale_fine,
+                                            tmp1,
+                                            tmp2);
 
         for (i = 0; i < mra->size_x; i++)
         {
@@ -409,9 +409,9 @@ sw_mra_proj_2d_backward(const sw_mra_t *mra,
     for (i = 0; i < mra->size_x; i++, iter_f += mra->size_v, iter_ps += mra->size_v)
     {
         sw_scale_fct_proj_dirichlet_backward(mra->scale_fct,
-					     mra->scale_fine,
-					     iter_ps,
-					     iter_f);
+                                             mra->scale_fine,
+                                             iter_ps,
+                                             iter_f);
     }
 }
 
@@ -455,29 +455,29 @@ sw_mra_proj_2d_backward(const sw_mra_t *mra,
 /*     offset = coef * coord_v[j] * (double)mra->size_x; */
 /*     for (k = mra->lambda_fine_x_inf; k <= mra->lambda_fine_x_sup; k++) { */
 /*       for (l = mra->lambda_fine_x_inf; l <= mra->lambda_fine_x_sup; l++) { */
-/* 	double val; */
+/*  double val; */
 
-/* 	val = 0.0; */
-/* 	for (n = -(degree >> 1); n <= degree - (degree >> 1); n++) { */
-/* 	  double  x; */
+/*  val = 0.0; */
+/*  for (n = -(degree >> 1); n <= degree - (degree >> 1); n++) { */
+/*    double  x; */
 
-/* 	  x = offset + k + n - l; */
-/* 	  if (x < N1) */
-/* 	    { */
-/* 	      do { */
-/* 		x += mra->size_x; */
-/* 	      } while (x < N1); */
-/* 	    } */
-/* 	  if (x >= mra->lambda_fine_x_sup + 1 + N1) */
-/* 	    { */
-/* 	      do { */
-/* 		x -= mra->size_x; */
-/* 	      } while (x >= mra->lambda_fine_x_sup + 1 + N1); */
-/* 	    } */
-/* 	  val += weights[n + (degree >> 1)] * sw_scale_fct_value_get(mra->scale_fct, x); */
-/* 	} */
-/* 	ps[ps_offset] = val; */
-/* 	ps_offset++; */
+/*    x = offset + k + n - l; */
+/*    if (x < N1) */
+/*      { */
+/*        do { */
+/*      x += mra->size_x; */
+/*        } while (x < N1); */
+/*      } */
+/*    if (x >= mra->lambda_fine_x_sup + 1 + N1) */
+/*      { */
+/*        do { */
+/*      x -= mra->size_x; */
+/*        } while (x >= mra->lambda_fine_x_sup + 1 + N1); */
+/*      } */
+/*    val += weights[n + (degree >> 1)] * sw_scale_fct_value_get(mra->scale_fct, x); */
+/*  } */
+/*  ps[ps_offset] = val; */
+/*  ps_offset++; */
 /*       } */
 /*     } */
 /*   } */
@@ -489,9 +489,9 @@ sw_mra_proj_2d_backward(const sw_mra_t *mra,
 
 void
 sw_mra_advection_v(const sw_mra_t *mra,
-		   double          coef,
-		   const double   *ps_in,
-		   double         *ps_out)
+                   double          coef,
+                   const double   *ps_in,
+                   double         *ps_out)
 {
     const double *weights;
     double        offset;
@@ -542,9 +542,9 @@ sw_mra_advection_v(const sw_mra_t *mra,
 
 void
 sw_mra_fwt_x_forward(const sw_mra_t *mra,
-		     const double   *proj_coef_fine,
-		     double         *proj_coef_coarse,
-		     double         *wavelet_coef)
+                     const double   *proj_coef_fine,
+                     double         *proj_coef_coarse,
+                     double         *wavelet_coef)
 {
     double *tmp;
     double *tmp_j_plus_1;
@@ -614,9 +614,9 @@ sw_mra_fwt_x_forward(const sw_mra_t *mra,
 
 void
 sw_mra_fwt_x_backward(const sw_mra_t *mra,
-		      const double   *proj_coef_coarse,
-		      const double   *wavelet_coef,
-		      double         *proj_coef_fine)
+                      const double   *proj_coef_coarse,
+                      const double   *wavelet_coef,
+                      double         *proj_coef_fine)
 {
     double *tmp;
     double *tmp_j_plus_1;
@@ -682,9 +682,9 @@ sw_mra_fwt_x_backward(const sw_mra_t *mra,
 
 void
 sw_mra_fwt_v_forward(const sw_mra_t *mra,
-		     const double   *proj_coef_fine,
-		     double         *proj_coef_coarse,
-		     double         *wavelet_coef)
+                     const double   *proj_coef_fine,
+                     double         *proj_coef_coarse,
+                     double         *wavelet_coef)
 {
     double *tmp;
     double *tmp_j_plus_1;
@@ -754,9 +754,9 @@ sw_mra_fwt_v_forward(const sw_mra_t *mra,
 
 void
 sw_mra_fwt_v_backward(const sw_mra_t *mra,
-		      const double   *proj_coef_coarse,
-		      const double   *wavelet_coef,
-		      double         *proj_coef_fine)
+                      const double   *proj_coef_coarse,
+                      const double   *wavelet_coef,
+                      double         *proj_coef_fine)
 {
     double *tmp;
     double *tmp_j_plus_1;

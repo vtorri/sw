@@ -9,9 +9,9 @@ typedef struct sw_sweldens_s sw_sweldens_t;
 
 
 SAPI sw_sweldens_t *sw_sweldens_new(const sw_scale_fct_base_t *sfb,
-				    int32_t                    order,
-				    int32_t                    scale,
-				    const rational_t          *tau);
+                                    int32_t                    order,
+                                    int32_t                    scale,
+                                    const rational_t          *tau);
 
 SAPI void        sw_sweldens_delete(sw_sweldens_t *w);
 

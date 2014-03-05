@@ -443,7 +443,7 @@ _sw_sweldens_chebyshev_value_get(int32_t n, rational_t const *x)
 
 static int8_t
 _sw_sweldens_weights_get(sw_sweldens_t const *s,
-                       rational_t const *tau)
+                         rational_t const *tau)
 {
     rational_t *moments;
     rational_t *matrix;
@@ -527,9 +527,9 @@ _sw_sweldens_weights_get(sw_sweldens_t const *s,
 
 sw_sweldens_t *
 sw_sweldens_new(sw_scale_fct_base_t const *sfb,
-		int32_t                    order,
-		int32_t                    scale,
-		rational_t const          *tau)
+                int32_t                    order,
+                int32_t                    scale,
+                rational_t const          *tau)
 {
     sw_sweldens_t *s;
 

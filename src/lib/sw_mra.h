@@ -73,11 +73,11 @@ struct sw_mra_s
  * give is the degree of the Lagrange polynomial to use.
  */
 SAPI sw_mra_t *sw_mra_new(int32_t order,
-			  int32_t order_dual,
-			  int32_t scale_coarse,
-			  int32_t scale_fine,
-			  sw_weights_type_t type,
-			  ...);
+                          int32_t order_dual,
+                          int32_t scale_coarse,
+                          int32_t scale_fine,
+                          sw_weights_type_t type,
+                          ...);
 
 /**
  * @brief Free the memory of the given MRA.
@@ -197,8 +197,8 @@ static __inline__ int32_t sw_mra_size_sup_v_get(const sw_mra_t *mra);
  * the same size.
  */
 SAPI void sw_mra_proj_x_forward(const sw_mra_t  *mra,
-				const double    *function,
-				double          *ps);
+                                const double    *function,
+                                double          *ps);
 
 /**
  * @brief Apply the backward projection on the fine scale in the X direction.
@@ -216,8 +216,8 @@ SAPI void sw_mra_proj_x_forward(const sw_mra_t  *mra,
  * same size.
  */
 SAPI void sw_mra_proj_x_backward(const sw_mra_t  *mra,
-				 const double    *ps,
-				 double          *function);
+                                 const double    *ps,
+                                 double          *function);
 
 /**
  * @brief Apply the forward projection on the fine scale in the V direction.
@@ -234,8 +234,8 @@ SAPI void sw_mra_proj_x_backward(const sw_mra_t  *mra,
  * the same size.
  */
 SAPI void sw_mra_proj_v_forward(const sw_mra_t *mra,
-				const double   *function,
-				double         *ps);
+                                const double   *function,
+                                double         *ps);
 
 /**
  * @brief Apply the backward projection on the fine scale in the V direction.
@@ -253,28 +253,28 @@ SAPI void sw_mra_proj_v_forward(const sw_mra_t *mra,
  * of the same size.
  */
 SAPI void sw_mra_proj_v_backward(const sw_mra_t *mra,
-				 const double   *ps,
-				 double         *function);
+                                 const double   *ps,
+                                 double         *function);
 
 SAPI void sw_mra_proj_2d_x_forward(const sw_mra_t *mra,
-				   const double   *function,
-				   double         *ps,
-				   double         *tmp1,
-				   double         *tmp2);
+                                   const double   *function,
+                                   double         *ps,
+                                   double         *tmp1,
+                                   double         *tmp2);
 
 SAPI void sw_mra_proj_2d_x_backward(const sw_mra_t *mra,
-				    const double   *ps,
-				    double         *function,
-				    double         *tmp1,
-				    double         *tmp2);
+                                    const double   *ps,
+                                    double         *function,
+                                    double         *tmp1,
+                                    double         *tmp2);
 
 SAPI void sw_mra_proj_2d_v_forward(const sw_mra_t *mra,
-				   const double   *function,
-				   double         *ps);
+                                   const double   *function,
+                                   double         *ps);
 
 SAPI void sw_mra_proj_2d_v_backward(const sw_mra_t *mra,
-				    const double   *ps,
-				    double         *function);
+                                    const double   *ps,
+                                    double         *function);
 
 /**
  * @brief Apply the forward projection on the fine scale in the V direction.
@@ -296,10 +296,10 @@ SAPI void sw_mra_proj_2d_v_backward(const sw_mra_t *mra,
  * computations.
  */
 SAPI void sw_mra_proj_2d_forward(const sw_mra_t *mra,
-				 const double   *function,
-				 double         *ps,
-				 double         *tmp1,
-				 double         *tmp2);
+                                 const double   *function,
+                                 double         *ps,
+                                 double         *tmp1,
+                                 double         *tmp2);
 
 /**
  * @brief Apply the backward projection on the fine scale in the V direction.
@@ -321,17 +321,17 @@ SAPI void sw_mra_proj_2d_forward(const sw_mra_t *mra,
  * buffers of size size_x and are used for internal computations.
  */
 SAPI void sw_mra_proj_2d_backward(const sw_mra_t *mra,
-				  const double   *ps,
-				  double         *function,
-				  double         *tmp1,
-				  double         *tmp2);
+                                  const double   *ps,
+                                  double         *function,
+                                  double         *tmp1,
+                                  double         *tmp2);
 
 /* double *sw_mra_scale_fct_ps_get(const sw_mra_t *mra, double coef); */
 
 SAPI void sw_mra_advection_v(const sw_mra_t *mra,
-			     double          coef,
-			     const double   *ps_in,
-			     double         *ps_out);
+                             double          coef,
+                             const double   *ps_in,
+                             double         *ps_out);
 
 
 #endif /* SW_MRA_H */

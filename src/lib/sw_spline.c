@@ -348,7 +348,7 @@ sw_spline_order_get(const sw_spline_t *spline)
         return 0;
     }
 
-    return spline->order;  
+    return spline->order;
 }
 
 int64_t
@@ -394,7 +394,8 @@ sw_spline_coef_get(const sw_spline_t *spline)
 }
 
 rational_t
-sw_spline_value_rat_get(const sw_spline_t *spline, const rational_t *val)
+sw_spline_value_rat_get(const sw_spline_t *spline,
+                        const rational_t  *val)
 {
     rational_t tmp;
     rational_t res;
@@ -419,7 +420,8 @@ sw_spline_value_rat_get(const sw_spline_t *spline, const rational_t *val)
 }
 
 double
-sw_spline_value_get(const sw_spline_t *spline, double val)
+sw_spline_value_get(const sw_spline_t *spline,
+                    double             val)
 {
     const double *coefs;
     const double *tmp;
@@ -450,7 +452,9 @@ sw_spline_value_get(const sw_spline_t *spline, double val)
 }
 
 double
-sw_spline_integral_value_get(const sw_spline_t *spline, double x1, double x2)
+sw_spline_integral_value_get(const sw_spline_t *spline,
+                             double x1,
+                             double x2)
 {
     const double *coefs;
     const double *tmp;
@@ -560,7 +564,9 @@ sw_spline_integral_value_get(const sw_spline_t *spline, double x1, double x2)
 }
 
 rational_t
-sw_spline_integral_value_rat_get(const sw_spline_t *spline, int x1, int x2)
+sw_spline_integral_value_rat_get(const sw_spline_t *spline,
+                                 int x1,
+                                 int x2)
 {
     const rational_t *coefs;
     const rational_t *tmp;

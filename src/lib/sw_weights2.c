@@ -459,7 +459,7 @@ sw_weights_del (sw_weights_t *w)
 
 const double *
 sw_weights_get(const sw_weights_t *w,
-	       int32_t            *weights_size)
+               int32_t            *weights_size)
 {
     if (!w || !weights_size)
         return NULL;
