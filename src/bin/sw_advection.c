@@ -1,3 +1,35 @@
+/*
+ * SW - a Spline wavelet library
+ * Copyright (c) 2013-2014, Vincent Torri
+ * All rights reserved
+ *
+ * This software is governed by the CeCILL-C license under French law
+ * and abiding by the rules of distribution of free software. You can
+ * use, modify and/or redistribute the software under the terms of the
+ * CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+ * URL: "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and rights to copy,
+ * modify and redistribute granted by the license, users are provided
+ * only with a limited warranty and the software's author, the holder of
+ * the economic rights, and the successive licensors have only limited
+ * liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading, using, modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean that it is complicated to manipulate, and that also
+ * therefore means that it is reserved for developers and experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards
+ * their requirements in conditions enabling the security of their
+ * systems and/or data to be ensured and, more generally, to use and
+ * operate it in the same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL-C license and that you accept its terms.
+ */
+
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -128,6 +160,10 @@ _advection(const sw_mra_t *mra, double delta_t, double *ps0, double *ps1)
   sfd = sw_mra_scale_fct_dual_get(mra);
   weights = sw_scale_fct_dual_weights_get(sfd, &degree);
 
+  printf("sf(0.0) = %f\n", sw_scale_fct_value_get(sf, 0.0));
+  printf("sf(0.5) = %f\n", sw_scale_fct_value_get(sf, 0.5));
+  printf("sf(1.0) = %f\n", sw_scale_fct_value_get(sf, 1.0));
+
   printf("weights :\n");
   for (k = 0; k < degree; k++)
   {
@@ -147,7 +183,7 @@ _advection(const sw_mra_t *mra, double delta_t, double *ps0, double *ps1)
           double v = 0.0;
           for (n = -(degree >> 1); n <= degree - (degree >> 1); n++)
             {
-                printf("%E   %E\n",
+                printf("[%d] [%d] [%d] : %E   %E\n", k, l, n,
                        k + n - l - c * delta_t * sw_mra_size_x_get(mra),
                        sw_scale_fct_value_get(sf, k + n - l - c * delta_t * sw_mra_size_x_get(mra)));
                 v += weights[n + (degree >> 1)] * sw_scale_fct_value_get(sf, k + n - l - c * delta_t * sw_mra_size_x_get(mra));
@@ -178,7 +214,8 @@ sw_advection(int32_t order, int32_t order_dual, int32_t scale, int32_t degree)
   lambda = 100;
 
   size = 1 << scale;
-  mra = sw_mra_new(order, order_dual, 3, scale, SW_WEIGHTS_TYPE_LAGRANGE, degree);
+  mra = sw_mra_new(order, order_dual, 2, scale, SW_WEIGHTS_TYPE_LAGRANGE, degree);
+  printf("mra : %p\n", mra);
 
   printf("size 1 : %d\n", size);
 
@@ -196,14 +233,15 @@ sw_advection(int32_t order, int32_t order_dual, int32_t scale, int32_t degree)
   delta_t = 0.5;
 
   sw_mra_proj_x_forward(mra, f0, ps0);
-  /* file_save(ps0, size, "sw_ps_0.dat"); */
+  file_save(ps0, size, "sw_ps_0.dat");
 
   printf("avant advection\n");
   _advection(mra, delta_t, ps0, ps1);
+  file_save(ps1, size, "sw_ps_0_5.dat");
   printf("apres advection\n");
 
   sw_mra_proj_x_backward(mra, ps1, f1);
-  file_save(f1, size, "sw_advection_0_8.dat");
+  file_save(f1, size, "sw_advection_0_5.dat");
 
   sw_free(ps1);
   sw_free(ps0);

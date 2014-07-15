@@ -1,5 +1,5 @@
 
-bin_PROGRAMS += src/bin/bench src/bin/tr_test src/bin/sw_advection
+bin_PROGRAMS += src/bin/bench src/bin/tr_test src/bin/sw_advection src/bin/sw_advection_2d
 
 src_bin_bench_SOURCES = src/bin/bench.c
 src_bin_bench_CPPFLAGS = -I$(top_srcdir)/src/lib
@@ -14,3 +14,8 @@ src_bin_sw_advection_SOURCES = src/bin/sw_advection.c
 src_bin_sw_advection_CPPFLAGS = -I$(top_srcdir)/src/lib
 src_bin_sw_advection_CFLAGS =
 src_bin_sw_advection_LDADD = src/lib/libsw.la -lm
+
+src_bin_sw_advection_2d_SOURCES = src/bin/sw_advection_2d.c
+src_bin_sw_advection_2d_CPPFLAGS = -I$(top_srcdir)/src/lib
+src_bin_sw_advection_2d_CFLAGS =
+src_bin_sw_advection_2d_LDADD = src/lib/libsw.la -lm
