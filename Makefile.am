@@ -27,6 +27,7 @@ m4/ltversion.m4
 lib_LTLIBRARIES =
 bin_PROGRAMS =
 EXTRA_DIST =
+SW_CLEANFILES =
 
 include src/lib/Makefile.mk
 include src/bin/Makefile.mk
@@ -43,8 +44,29 @@ m4/sw_coverage.m4 \
 m4/sw_doxygen.m4 \
 m4/sw_tests.m4
 
+sed_process = \
+$(SED) \
+-e 's,@VERSION\@,$(VERSION),g' \
+-e 's,@VMAJ\@,$(VMAJ),g' \
+-e 's,@prefix\@,$(prefix),g' \
+-e 's,@exec_prefix\@,$(exec_prefix),g' \
+-e 's,@libdir\@,$(libdir),g' \
+-e 's,@includedir\@,$(includedir),g' \
+-e 's,@pkgincludedir\@,$(pkgincludedir),g' \
+< $< > $@ || rm $@
+
+pc_verbose = $(pc_verbose_@AM_V@)
+pc_verbose_ = $(pc_verbose_@AM_DEFAULT_V@)
+pc_verbose_0 = @echo "  PC      " $@;
+
+sw.pc: $(top_srcdir)/sw.pc.in Makefile
+	$(AM_V_at)rm -f $@
+	$(pc_verbose)$(sed_process)
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = sw.pc
+
+SW_CLEANFILES += sw.pc
 
 .PHONY: doc coverage
 
@@ -84,8 +106,8 @@ coverage:
 	@make check
 	@make lcov-report
 
-clean-local:
-	@rm -rf coverage
+SW_CLEANFILES += coverage
+
 else
 lcov-reset:
 	@echo "reconfigure with --enable-gcov"
@@ -96,3 +118,6 @@ lcov-report:
 coverage:
 	@echo "reconfigure with --enable-tests --enable-gcov"
 endif
+
+clean-local:
+	rm -rf $(SW_CLEANFILES)

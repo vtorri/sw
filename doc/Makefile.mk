@@ -6,8 +6,11 @@ PACKAGE_DOCNAME = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)-doc
 
 if SW_BUILD_DOC
 
+SW_DOC_CLEANFILES = doc/html/ doc/latex/ $(PACKAGE_DOCNAME).tar*
+SW_CLEANFILES += $(SW_DOC_CLEANFILES)
+
 doc-clean:
-	rm -rf doc/html/ doc/latex/ $(PACKAGE_DOCNAME).tar*
+	rm -rf $(SW_DOC_CLEANFILES)
 
 doc: all doc-clean
 	$(DOXYGEN)
@@ -18,8 +21,6 @@ doc: all doc-clean
 	bzip2 -9 $(PACKAGE_DOCNAME).tar
 	rm -rf $(PACKAGE_DOCNAME)/
 	mv $(PACKAGE_DOCNAME).tar.bz2 $(top_srcdir)
-
-clean-local: doc-clean
 
 else
 

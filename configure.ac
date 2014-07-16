@@ -88,7 +88,6 @@ SW_CHECK_COMPILER_FLAGS([-Wall -Wextra -Wshadow -Wno-long-long -Wno-pointer-sign
 
 AC_CONFIG_FILES([
 Makefile
-sw.pc
 ])
 
 AC_OUTPUT

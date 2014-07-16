@@ -6,8 +6,6 @@ pkgincludedir=@includedir@/sw-@VMAJ@
 
 Name: sw
 Description: Library for bi-orthogonal spline wavelets compactly supported
-Requires:
 Version: @VERSION@
 Libs: -L${libdir} -lsw
-Libs.private:
 Cflags: -I${pkgincludedir}
