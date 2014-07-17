@@ -241,7 +241,7 @@ sw_advection_2d(int32_t order, int32_t order_dual, int32_t scale, int32_t degree
 
     file_save(f0, size, "sw_advection_2d_0.dat");
 
-    mra = sw_mra_new(order, order_dual, 3, scale, SW_WEIGHTS_TYPE_LAGRANGE, degree);
+    mra = sw_mra_lagrange_new(order, order_dual, 3, scale, degree);
 
     /* advection en x */
     for (j = 0; j < size; j++)

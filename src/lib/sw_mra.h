@@ -82,13 +82,14 @@ struct sw_mra_s
 
 
 /**
- * @brief Create a new mra of the given orders and scales.
+ * @brief Create a new mra of the given orders and scales, using the
+ * Lagrange polynomials quadrature scheme.
  *
  * @param order The order of the spline function.
  * @param order_dual The dual order of the dual spline function.
  * @param scale_coarse The coarse scale used in the MRA.
  * @param scale_fine The fine scale used in the MRA.
- * @param type The type of the quadrature formula to une in the projection algorithm.
+ * @param degree The degree of the lagrange polynomials.
  * @return The new MRA object.
  *
  * This function creates a MRA object of orders @p order and
@@ -99,17 +100,39 @@ struct sw_mra_s
  * sw_mra_proj_x_backward() and sw_mra_proj_v_backward(). If an error
  * occurs, @c NULL is returned. When this MRA is not used anymore,
  * free its memory with sw_mra_del().
- *
- * When @p type is @ref SW_WEIGHTS_TYPE_LAGRANGE, the quadrature
- * formula use a Lagrange interpolation. Hence the next parameter to
- * give is the degree of the Lagrange polynomial to use.
  */
-SAPI sw_mra_t *sw_mra_new(int32_t order,
-                          int32_t order_dual,
-                          int32_t scale_coarse,
-                          int32_t scale_fine,
-                          sw_weights_type_t type,
-                          ...);
+SAPI sw_mra_t *sw_mra_lagrange_new(int32_t order,
+                                   int32_t order_dual,
+                                   int32_t scale_coarse,
+                                   int32_t scale_fine,
+                                   int32_t degree);
+
+/**
+ * @brief Create a new mra of the given orders and scales, using the
+ * Sweldens quadrature scheme.
+ *
+ * @param order The order of the spline function.
+ * @param order_dual The dual order of the dual spline function.
+ * @param scale_coarse The coarse scale used in the MRA.
+ * @param scale_fine The fine scale used in the MRA.
+ * @param degree The degree of the lagrange polynomials.
+ * @return The new MRA object.
+ *
+ * This function creates a MRA object of orders @p order and
+ * @p order_dual and returns a pointer to a newly created MRA. The
+ * coarse scale and fine scale of the MRA are respectively set by
+ * @p scale_coarse and @p scale_fine. @p type sets the type of the
+ * algorithm used in sw_mra_proj_x_forward(), sw_mra_proj_v_forward(),
+ * sw_mra_proj_x_backward() and sw_mra_proj_v_backward(). If an error
+ * occurs, @c NULL is returned. When this MRA is not used anymore,
+ * free its memory with sw_mra_del().
+ */
+SAPI sw_mra_t *sw_mra_sweldens_new(int32_t order,
+                                   int32_t order_dual,
+                                   int32_t scale_coarse,
+                                   int32_t scale_fine,
+                                   int32_t r,
+                                   int32_t s);
 
 /**
  * @brief Free the memory of the given MRA.

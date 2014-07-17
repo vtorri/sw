@@ -221,21 +221,37 @@ SAPI sw_scale_fct_dual_t *sw_scale_fct_dual_new(int32_t        order,
 SAPI void sw_scale_fct_dual_del(sw_scale_fct_dual_t *sfd);
 
 /**
- * @brief Set the type of weights to use for the given dual scale function.
+ * @brief Set the weights with Lagrange polynomials quadrature scheme to use
+ * for the given dual scale function.
  *
  * @param sf The dual scale function.
- * @param type The type of weights.
+ * @param degree The degree of the lagrange polynomials.
+ * @return 1 on success, 0 otherwise.
+ *
+ * This function sets the type of weights to #SW_WEIGHTS_TYPE_LAGRANGE for the
+ * dual scale function @p sf. It will use the Lagrange polynomial
+ * scheme. If @p sf is @c NULL or @p degree is less or equal than 0, 0
+ * is returned, otherwise, 1 is returned.
+ */
+SAPI uint8_t sw_scale_fct_dual_lagrange_set(sw_scale_fct_dual_t *sf,
+                                            int32_t              degree);
+
+/**
+ * @brief Set the weights with Sweldens quadrature scheme to use for the given
+ * dual scale function.
+ *
+ * @param sf The dual scale function.
+ * @param r The r parameter.
+ * @param s The s parameter.
  * @return 1 on success, 0 otherwise.
  *
  * This function sets the type of weights @p type for the dual scale function
- * @p sf. If @p sf is @c NULL or @p type is invalid, 0 is returned,
- * otherwise, 1 is returned.
- *
- * @todo comment va_arg
+ * @p sf. It will use the Sweldens quadrature scheme. If @p sf is @c NULL
+ * or @p r or @p s are invalid, 0 is returned, otherwise, 1 is returned.
  */
-SAPI uint8_t sw_scale_fct_dual_type_set(sw_scale_fct_dual_t   *sf,
-                                        sw_weights_type_t      type,
-                                        ...);
+SAPI uint8_t sw_scale_fct_dual_sweldens_set(sw_scale_fct_dual_t *sf,
+                                            int32_t              r,
+                                            int32_t              s);
 
 /**
  * @brief Get the type of weights for the given dual scale function.

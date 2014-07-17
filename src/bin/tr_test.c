@@ -255,7 +255,7 @@ test_advection(int32_t order, int32_t order_dual, int32_t scale, int32_t degree)
   lambda = 100;
 
   size = 1 << scale;
-  mra = sw_mra_new (order, order_dual, 3, scale, SW_WEIGHTS_TYPE_LAGRANGE, degree);
+  mra = sw_mra_lagrange_new (order, order_dual, 3, scale, degree);
 
   f0 = sw_new(size);
   f1 = sw_new(size);

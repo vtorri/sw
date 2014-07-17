@@ -651,58 +651,39 @@ sw_scale_fct_dual_del(sw_scale_fct_dual_t *sf)
 }
 
 uint8_t
-sw_scale_fct_dual_type_set(sw_scale_fct_dual_t *sf,
-                           sw_weights_type_t       type,
-                           ...)
+sw_scale_fct_dual_type_lagrange_set(sw_scale_fct_dual_t *sf,
+                                    int32_t              degree)
 {
-    va_list va;
-
-    if (!sf)
+    if (degree <= 0)
         return 0;
 
-    va_start(va, type);
+    sf->weights = sw_weights_lagrange_new(&sf->scale_fct_base, degree);
+    if (!sf->weights)
+        return 0;
 
-    switch (type)
-    {
-     case SW_WEIGHTS_TYPE_LAGRANGE:
-     {
-         int32_t degree;
+    sf->proj_periodic_forward = sw_scale_fct_dual_inner_product_lagrange_periodic_forward;
+    sf->proj_dirichlet_forward = sw_scale_fct_dual_inner_product_lagrange_dirichlet_forward;
 
-         degree = va_arg(va, int32_t);
-         sf->weights = sw_weights_lagrange_new(&sf->scale_fct_base, degree);
-         if (!sf->weights)
-         {
-             va_end(va);
-             return 0;
-         }
-         sf->proj_periodic_forward = sw_scale_fct_dual_inner_product_lagrange_periodic_forward;
-         sf->proj_dirichlet_forward = sw_scale_fct_dual_inner_product_lagrange_dirichlet_forward;
-         break;
-     }
-     case SW_WEIGHTS_TYPE_SWELDENS:
-     {
-         int32_t r;
-         int32_t s;
+    sf->type = SW_WEIGHTS_TYPE_LAGRANGE;
+    printf(" $$ %s %p\n", __FUNCTION__, sf->weights);
 
-         r = va_arg(va, int32_t);
-         s = va_arg(va, int32_t);
-         sf->weights = sw_weights_sweldens_new(&sf->scale_fct_base, r, s);
-         if (!sf->weights)
-         {
-             va_end(va);
-             return 0;
-         }
-         break;
-     }
-     default:
-         va_end(va);
-         return 0;
-    }
+    return 1;
+}
 
-    va_end(va);
+uint8_t
+sw_scale_fct_dual_type_sweldens_set(sw_scale_fct_dual_t *sf,
+                                    int32_t              r,
+                                    int32_t              s)
+{
+    sf->weights = sw_weights_sweldens_new(&sf->scale_fct_base, r, s);
+    if (!sf->weights)
+        return 0;
 
-    sf->type = type;
-    printf(" $$ %p\n", sf->weights);
+    sf->proj_periodic_forward = sw_scale_fct_dual_inner_product_lagrange_periodic_forward;
+    sf->proj_dirichlet_forward = sw_scale_fct_dual_inner_product_lagrange_dirichlet_forward;
+
+    sf->type = SW_WEIGHTS_TYPE_SWELDENS;
+    printf(" $$ %s %p\n", __FUNCTION__, sf->weights);
 
     return 1;
 }

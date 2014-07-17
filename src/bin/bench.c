@@ -58,7 +58,7 @@ test_ip_x(int32_t order, int32_t order_dual, int32_t scale, int32_t degree)
 
     sf = sw_scale_fct_new(order);
     sfd = sw_scale_fct_dual_new(order, order_dual);
-    sw_scale_fct_dual_type_set(sfd, SW_WEIGHTS_TYPE_LAGRANGE, degree);
+    sw_scale_fct_dual_type_lagrange_set(sfd, degree);
 
     f1 = sw_new(size);
     f2 = sw_new(size);
@@ -98,7 +98,7 @@ test_mra(int32_t order, int32_t order_dual, int32_t scale, int32_t degree)
 
     size = 1 << scale;
 
-    mra = sw_mra_new (order, order_dual, 3, scale, SW_WEIGHTS_TYPE_LAGRANGE, degree);
+    mra = sw_mra_lagrange_new (order, order_dual, 3, scale, degree);
     sf = sw_mra_scale_fct_get(mra);
     sfd = sw_mra_scale_fct_dual_get(mra);
 

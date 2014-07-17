@@ -53,34 +53,13 @@
  * @cond SW_LOCAL
  */
 
-/**
- * @endcond SW_LOCAL
- */
-
-
-/******************************************************************************/
-/*                                                                            */
-/*                                   GLOBAL                                   */
-/*                                                                            */
-/******************************************************************************/
-
-
-/******************************************************************************/
-/*                                                                            */
-/*                                    API                                     */
-/*                                                                            */
-/******************************************************************************/
-
-sw_mra_t *
-sw_mra_new(int32_t order,
+static sw_mra_t *
+sw_mra_internal_new(int32_t order,
            int32_t order_dual,
            int32_t scale_coarse,
-           int32_t scale_fine,
-           sw_weights_type_t type,
-           ...)
+           int32_t scale_fine)
 {
     sw_mra_t  *mra;
-    va_list va;
 
     if (scale_coarse >= scale_fine)
         return NULL;
@@ -96,35 +75,6 @@ sw_mra_new(int32_t order,
     mra->scale_fct_dual = sw_scale_fct_dual_new(order, order_dual);
     if (!mra->scale_fct_dual)
         goto no_scale_fct_dual;
-
-    va_start(va, type);
-
-    switch (type)
-    {
-     case SW_WEIGHTS_TYPE_LAGRANGE:
-     {
-         int32_t degree;
-
-         degree = va_arg(va, int32_t);
-         va_end(va);
-         sw_scale_fct_dual_type_set(mra->scale_fct_dual, type, degree);
-         break;
-     }
-     case SW_WEIGHTS_TYPE_SWELDENS:
-     {
-         int32_t r;
-         int32_t s;
-
-         r = va_arg(va, int32_t);
-         s = va_arg(va, int32_t);
-         va_end(va);
-         sw_scale_fct_dual_type_set(mra->scale_fct_dual, type, r, s);
-         break;
-     }
-     default:
-         va_end(va);
-         goto no_scale_fct_dual;
-    }
 
     mra->wavelet = sw_wavelet_new(mra->scale_fct, mra->scale_fct_dual);
     if (!mra->wavelet)
@@ -155,6 +105,76 @@ sw_mra_new(int32_t order,
     free(mra);
 
     return NULL;
+}
+
+/**
+ * @endcond SW_LOCAL
+ */
+
+
+/******************************************************************************/
+/*                                                                            */
+/*                                   GLOBAL                                   */
+/*                                                                            */
+/******************************************************************************/
+
+
+/******************************************************************************/
+/*                                                                            */
+/*                                    API                                     */
+/*                                                                            */
+/******************************************************************************/
+
+sw_mra_t *
+sw_mra_lagrange_new(int32_t order,
+                    int32_t order_dual,
+                    int32_t scale_coarse,
+                    int32_t scale_fine,
+                    int32_t degree)
+{
+    sw_mra_t *mra;
+    uint8_t res;
+
+    mra = sw_mra_internal_new(order, order_dual, scale_coarse, scale_fine);
+    if (!mra)
+        return NULL;
+    res = sw_scale_fct_dual_type_lagrange_set(mra->scale_fct_dual, degree);
+    if (!res)
+    {
+        sw_scale_fct_dual_del(mra->scale_fct_dual);
+        sw_scale_fct_del(mra->scale_fct);
+        free(mra);
+        return NULL;
+    }
+
+    return mra;
+}
+
+sw_mra_t *
+sw_mra_sweldens_new(int32_t order,
+                    int32_t order_dual,
+                    int32_t scale_coarse,
+                    int32_t scale_fine,
+                    int32_t r,
+                    int32_t s)
+{
+    sw_mra_t *mra;
+    uint8_t res;
+
+    mra = sw_mra_internal_new(order, order_dual, scale_coarse, scale_fine);
+    if (!mra)
+        return NULL;
+
+    res = sw_scale_fct_dual_type_sweldens_set(mra->scale_fct_dual, r, s);
+    if (!res)
+    {
+        sw_scale_fct_dual_del(mra->scale_fct_dual);
+        sw_scale_fct_del(mra->scale_fct);
+        free(mra);
+        return NULL;
+    }
+
+    return mra;
 }
 
 void

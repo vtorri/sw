@@ -214,7 +214,7 @@ sw_advection(int32_t order, int32_t order_dual, int32_t scale, int32_t degree)
   lambda = 100;
 
   size = 1 << scale;
-  mra = sw_mra_new(order, order_dual, 2, scale, SW_WEIGHTS_TYPE_LAGRANGE, degree);
+  mra = sw_mra_lagrange_new(order, order_dual, 2, scale, degree);
   printf("mra : %p\n", mra);
 
   printf("size 1 : %d\n", size);
